@@ -1,0 +1,8 @@
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles/rebuild_cache.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles/gloom.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles/edit_cache.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/CMakeFiles/rebuild_cache.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/CMakeFiles/edit_cache.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/src/CMakeFiles/rebuild_cache.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/src/CMakeFiles/glfw.dir
+/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/src/CMakeFiles/edit_cache.dir
