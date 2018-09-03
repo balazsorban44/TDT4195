@@ -39,8 +39,6 @@ void runProgram(GLFWwindow* window)
     // Configure miscellaneous OpenGL settings
     glEnable(GL_CULL_FACE);
 
-    // Set default colour after clearing the colour buffer
-    glClearColor(0.3f, 0.5f, 0.8f, 1.0f);
 
     float coords_1[] = {
         0.25, 0.25, 0,
