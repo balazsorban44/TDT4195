@@ -34,7 +34,7 @@ stdint.h
 inttypes.h
 -
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c
 stdio.h
 -
 string.h

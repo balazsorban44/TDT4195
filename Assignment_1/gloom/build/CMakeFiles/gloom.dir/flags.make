@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_FLAGS =  
 
-C_DEFINES = -DGLFW_INCLUDE_NONE -DPROJECT_SOURCE_DIR=\"/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom\"
+C_DEFINES = -DGLFW_INCLUDE_NONE -DPROJECT_SOURCE_DIR=\"/home/balazs/projects/TDT4195/Assignment_1/gloom\"
 
-C_INCLUDES = -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/include -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/include -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glm -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/stb 
+C_INCLUDES = -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/include -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/include -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glm -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/stb 
 
 CXX_FLAGS =  -Wall -Wextra -Wpedantic -std=c++11  
 
-CXX_DEFINES = -DGLFW_INCLUDE_NONE -DPROJECT_SOURCE_DIR=\"/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom\"
+CXX_DEFINES = -DGLFW_INCLUDE_NONE -DPROJECT_SOURCE_DIR=\"/home/balazs/projects/TDT4195/Assignment_1/gloom\"
 
-CXX_INCLUDES = -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/include -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/include -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glm -I/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/stb 
+CXX_INCLUDES = -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/include -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/include -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glm -I/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/stb 
 

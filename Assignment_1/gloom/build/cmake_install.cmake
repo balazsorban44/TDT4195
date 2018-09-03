@@ -1,4 +1,4 @@
-# Install script for directory: /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom
+# Install script for directory: /home/balazs/projects/TDT4195/Assignment_1/gloom
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/cmake_install.cmake")
+  include("/home/balazs/projects/TDT4195/Assignment_1/gloom/build/gloom/vendor/glfw/cmake_install.cmake")
 
 endif()
 
@@ -51,5 +51,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/balazs/projects/TDT4195/Assignment_1/gloom/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

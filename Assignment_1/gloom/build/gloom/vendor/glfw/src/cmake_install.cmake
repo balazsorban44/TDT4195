@@ -1,4 +1,4 @@
-# Install script for directory: /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/src
+# Install script for directory: /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glfw/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

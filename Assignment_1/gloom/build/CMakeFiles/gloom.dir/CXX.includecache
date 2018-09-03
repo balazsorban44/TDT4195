@@ -70,13 +70,13 @@ GL/glext.h
 GL/glu.h
 -
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
 glad/glad.h
 -
 string
 -
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/gloom/shader.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/gloom/shader.hpp
 glad/glad.h
 -
 cassert
@@ -88,11 +88,11 @@ memory
 string
 -
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/main.cpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/main.cpp
 gloom/gloom.hpp
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
 program.hpp
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
 glad/glad.h
 -
 GLFW/glfw3.h
@@ -100,15 +100,17 @@ GLFW/glfw3.h
 cstdlib
 -
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.cpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.cpp
 program.hpp
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
 gloom/gloom.hpp
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/gloom/gloom.hpp
 gloom/shader.hpp
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/gloom/shader.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/gloom/shader.hpp
+iostream
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/iostream
 
-/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
+/home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.hpp
 GLFW/glfw3.h
 -
 glad/glad.h

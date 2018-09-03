@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom
+CMAKE_SOURCE_DIR = /home/balazs/projects/TDT4195/Assignment_1/gloom
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build
+CMAKE_BINARY_DIR = /home/balazs/projects/TDT4195/Assignment_1/gloom/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/gloom.dir/depend.make
@@ -59,16 +59,16 @@ include CMakeFiles/gloom.dir/flags.make
 
 CMakeFiles/gloom.dir/gloom/src/main.cpp.o: CMakeFiles/gloom.dir/flags.make
 CMakeFiles/gloom.dir/gloom/src/main.cpp.o: ../gloom/src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/gloom.dir/gloom/src/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gloom.dir/gloom/src/main.cpp.o -c /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/gloom.dir/gloom/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gloom.dir/gloom/src/main.cpp.o -c /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/main.cpp
 
 CMakeFiles/gloom.dir/gloom/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gloom.dir/gloom/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/main.cpp > CMakeFiles/gloom.dir/gloom/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/main.cpp > CMakeFiles/gloom.dir/gloom/src/main.cpp.i
 
 CMakeFiles/gloom.dir/gloom/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gloom.dir/gloom/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/main.cpp -o CMakeFiles/gloom.dir/gloom/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/main.cpp -o CMakeFiles/gloom.dir/gloom/src/main.cpp.s
 
 CMakeFiles/gloom.dir/gloom/src/main.cpp.o.requires:
 
@@ -83,16 +83,16 @@ CMakeFiles/gloom.dir/gloom/src/main.cpp.o.provides.build: CMakeFiles/gloom.dir/g
 
 CMakeFiles/gloom.dir/gloom/src/program.cpp.o: CMakeFiles/gloom.dir/flags.make
 CMakeFiles/gloom.dir/gloom/src/program.cpp.o: ../gloom/src/program.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/gloom.dir/gloom/src/program.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gloom.dir/gloom/src/program.cpp.o -c /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/gloom.dir/gloom/src/program.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gloom.dir/gloom/src/program.cpp.o -c /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.cpp
 
 CMakeFiles/gloom.dir/gloom/src/program.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gloom.dir/gloom/src/program.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.cpp > CMakeFiles/gloom.dir/gloom/src/program.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.cpp > CMakeFiles/gloom.dir/gloom/src/program.cpp.i
 
 CMakeFiles/gloom.dir/gloom/src/program.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gloom.dir/gloom/src/program.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/src/program.cpp -o CMakeFiles/gloom.dir/gloom/src/program.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/src/program.cpp -o CMakeFiles/gloom.dir/gloom/src/program.cpp.s
 
 CMakeFiles/gloom.dir/gloom/src/program.cpp.o.requires:
 
@@ -107,16 +107,16 @@ CMakeFiles/gloom.dir/gloom/src/program.cpp.o.provides.build: CMakeFiles/gloom.di
 
 CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o: CMakeFiles/gloom.dir/flags.make
 CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o: ../gloom/vendor/glad/src/glad.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o   -c /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/balazs/projects/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o   -c /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c
 
 CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c > CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c > CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.i
 
 CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c -o CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/balazs/projects/TDT4195/Assignment_1/gloom/gloom/vendor/glad/src/glad.c -o CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.s
 
 CMakeFiles/gloom.dir/gloom/vendor/glad/src/glad.c.o.requires:
 
@@ -158,7 +158,7 @@ gloom/gloom: /usr/lib/x86_64-linux-gnu/libXi.so
 gloom/gloom: /usr/lib/x86_64-linux-gnu/libXxf86vm.so
 gloom/gloom: /usr/lib/x86_64-linux-gnu/libXcursor.so
 gloom/gloom: CMakeFiles/gloom.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable gloom/gloom"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/balazs/projects/TDT4195/Assignment_1/gloom/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable gloom/gloom"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gloom.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -177,6 +177,6 @@ CMakeFiles/gloom.dir/clean:
 .PHONY : CMakeFiles/gloom.dir/clean
 
 CMakeFiles/gloom.dir/depend:
-	cd /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build /home/balazs/projects/NTNU/2018/Fall/TDT4195/Assignment_1/gloom/build/CMakeFiles/gloom.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/balazs/projects/TDT4195/Assignment_1/gloom/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/balazs/projects/TDT4195/Assignment_1/gloom /home/balazs/projects/TDT4195/Assignment_1/gloom /home/balazs/projects/TDT4195/Assignment_1/gloom/build /home/balazs/projects/TDT4195/Assignment_1/gloom/build /home/balazs/projects/TDT4195/Assignment_1/gloom/build/CMakeFiles/gloom.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/gloom.dir/depend
 
