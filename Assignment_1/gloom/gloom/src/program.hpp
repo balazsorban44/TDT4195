@@ -8,23 +8,8 @@
 #include <glad/glad.h>
 #include <string>
 
-// void glGenVertexArrays(int count, unsigned int* arrayIDs);
-// void glBindVertexArray(unsigned int vertexArrayID);
-// void glGenBuffers(int count, unsigned int* bufferIDs);
-// void glBindBuffer(enum target, unsigned int bufferID);
-// void glBufferData(enum target, size_t size, void* data, enum usage);
-// void glVertexAttribPointer(
-//     unsigned int index,
-//     int size,
-//     enum type,
-//     bool normalised,
-//     size_t stride,
-//     void* pointer
-// );
-// void glEnableVertexAttribArray(unsigned int index);
-// void glDrawElements(enum mode, int count, enum type, void* indices);
 
-int setUpVAO(float* coords, unsigned int* indexes, int elementCount, int indexCount);
+unsigned int setUpVAO(float* coords, unsigned int* indexes, int elementCount, int indexCount);
 // Main OpenGL program
 void runProgram(GLFWwindow* window);
 
