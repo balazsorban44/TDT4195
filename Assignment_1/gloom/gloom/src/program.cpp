@@ -3,6 +3,7 @@
 #include "gloom/gloom.hpp"
 #include "gloom/shader.hpp"
 #include "iostream"
+#include "math.h"
 
 
 //  Coordinates DATA
@@ -58,7 +59,7 @@ int indices_2_count = sizeof(indices_2)/sizeof(*indices_2);
 
 
 
-unsigned int setUpVAO(float* coords, unsigned int* indexes, int elementCount, int indexCount) {
+unsigned int setUpVAO(float* coords, unsigned int* indices, int elementCount, int indexCount) {
     unsigned int arrayIDs;
     unsigned int arrayBuffer;
     glGenVertexArrays(1, &arrayIDs);
@@ -66,13 +67,12 @@ unsigned int setUpVAO(float* coords, unsigned int* indexes, int elementCount, in
     glGenBuffers(1, &arrayBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
     glBufferData(GL_ARRAY_BUFFER, elementCount * sizeof(float), coords, GL_STATIC_DRAW);
-    // glVertexAttribPointer(arrayIDs,3,GL_FLOAT,GL_FALSE,12, 0);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,12, 0);
     // Generate index buffer
     unsigned int indexIDs;
     glGenBuffers(1, &indexIDs);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexIDs);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indexes, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
     return arrayIDs;
 };
@@ -95,27 +95,89 @@ void runProgram(GLFWwindow* window)
 
     
     // Set up your scene here (create Vertex Array Objects, etc.)
-    unsigned int task1 = setUpVAO(coords_1, indexes_1, 45, 15);
-    // unsigned int task2 = setUpVAO(coords_2, indexes_2, 9, 3);
+    // unsigned int task1 = setUpVAO(coords_1, indices_1, coords_1_count, indices_1_count);
+    // unsigned int task2 = setUpVAO(coords_2, indices_2, coords_2_count, indices_2_count);
+    unsigned int task3 = setUpVAO(coords_3, indices_2, coords_2_count, indices_2_count);
+    glEnableVertexAttribArray(0);
 
     // Activeate shaders
     shader.activate();
+
+    int location_1 = glGetUniformLocation(shader.get(), "u_color");
+
+    int i = 0;
     // Rendering Loop
+    float r = 0;
+    float g = 0;
+    float b = 0;
+    char active = 'r';
+    bool forward = true;
+    float max = 0.99;
     while (!glfwWindowShouldClose(window))
     {
+        
 
+        
+        if (active == 'r') {
+            r = fmod(i, 512.0) / 255;
+            g = 0;
+            b = 0;
+            if (r > max) {
+                std::cout << "green activated" << std::endl;
+                active = 'g';
+                i = 0;
+            }
+        }
+        if (active == 'g') {
+            g = fmod(i, 512.0) / 255;
+            r = max;
+            b = 0;
+            if (g > max) {
+                std::cout << "blue activated" << std::endl;
+                active = 'b';
+                i = 0;
+            }
+        }
+        if (active == 'b') {
+            b = fmod(i, 255.0) / 255;
+            r = max;
+            g = max;
+            if (b > max) {
+                std::cout << "red activated" << std::endl;
+                active = 'r';
+                g = 0;
+                r = 0;
+                b = 0;
+                i = 0;
+                forward = !forward;
+            }
+        }
+        
+        
+        if (!forward) {
+            r = 1-r;
+            g = 1-g;
+            b = 1-b;
+        }
+
+        
+        
+        
+        glUniform4f(location_1, r,g,b ,1.0f);
+        ++i;
+        
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         
         // Task 1
-        glEnableVertexAttribArray(0);
         // glEnableVertexAttribArray(task1);
-        glDrawElements(GL_TRIANGLES, 15, GL_UNSIGNED_INT, 0);
+        // glUniform1i(value, 2);
+        // glDrawElements(GL_TRIANGLES, indices_1_count, GL_UNSIGNED_INT, 0);
 
-        // Task 2
+        // Task 2 / 3
         // glEnableVertexAttribArray(task2);
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_TRIANGLES, indices_2_count, GL_UNSIGNED_INT, 0);
 
         
 
