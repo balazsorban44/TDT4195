@@ -109,6 +109,8 @@ unsigned int indices[] = {6,7,8,3,4,5,0,1,2};
 glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-1.0f); //c) a)
 
 float axisRotation[] = {0.0,0.0,0.0};  // x, y, z
+glm::mat4 rotationX = glm::mat4({{1,0,0,0},{0,1,0,0},{0,0,0,1},{0,0,0,1}} );
+glm::mat4 rotationY = glm::mat4({{1,0,0,0},{0,1,0,0},{0,0,0,1},{0,0,0,1}} );
 
 
 
@@ -149,7 +151,7 @@ void runProgram(GLFWwindow* window)
     float OsciValue = -0.5;
     glm::mat4 projection;
     glm::mat4 view;
-    glm::mat4 scale;
+    glm::mat4 model;
     glm::mat4 rotateX;
     glm::mat4 rotateY;
 
@@ -159,17 +161,17 @@ void runProgram(GLFWwindow* window)
     {
 
         projection = glm::perspective(40.0f,float(windowHeight) / float(windowWidth),1.0f,100.0f);
-        view = glm::translate(glm::mat4(1.0f), currentMotion);
-        scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.8f));
-        rotateX = glm::rotate(view, axisRotation[0],glm::vec3(1,0,0));
-        rotateY = glm::rotate(view, axisRotation[1],glm::vec3(0,1,0));
+        view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,-1.0));
+        model = glm::translate(glm::mat4(1.0f), currentMotion);
+        rotateX = glm::rotate(model, axisRotation[0],glm::vec3(1,0,0));
+        rotateY = glm::rotate(model, axisRotation[1],glm::vec3(0,1,0));
 
-        glm::mat4 mvp_matrix = projection * rotateX * rotateY * view * scale;
+        glm::mat4 mvp_matrix = projection * rotateX * rotateY * view * model;
 
         shader.activate();
 
       // int location_1 = glGetUniformLocation(shader.get(), "PointValue");
-        int location_2 = glGetUniformLocation(shader.get(), "projectionMatrix");
+        int location_2 = glGetUniformLocation(shader.get(), "cameraMatrix");
 
       //  glUniform1f(location_1, sin(OsciValue));
         glUniformMatrix4fv(location_2, 1,GL_FALSE,&mvp_matrix[0][0]);

@@ -5,7 +5,7 @@ layout(location = 1) in vec4 in_color;
 layout(location = 2) out vec4 out_color;
 
 uniform float PointValue;
-uniform mat4 projectionMatrix;
+uniform mat4 cameraMatrix;
 
 mat4 matrix = {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}};
 //mat4 matrix = {{a,d,0,0},{b,e,0,0},{0,0,1,0},{c,f,0,1}};
@@ -26,7 +26,7 @@ void main()
 
    // gl_Position = matrix * position;
 
-    gl_Position = projectionMatrix * position;
+    gl_Position = cameraMatrix * position;
 
    // gl_Position = position;
 
