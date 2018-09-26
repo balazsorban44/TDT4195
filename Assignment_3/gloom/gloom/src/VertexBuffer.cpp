@@ -4,9 +4,10 @@
 
 #include <glad/glad.h>
 #include "VertexBuffer.h"
+#include "floats.hpp"
+#include <vector>
 
-
-VertexBuffer::VertexBuffer(const void* data, unsigned int size) {
+VertexBuffer::VertexBuffer(const void *data, unsigned long size) {
     glGenBuffers(1, &m_rendererID);
     this->Bind();
     glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);

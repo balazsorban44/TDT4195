@@ -4,11 +4,15 @@
 
 #ifndef GLOOM_VERTEXBUFFER_H
 #define GLOOM_VERTEXBUFFER_H
+
+#include <vector>
+#include "floats.hpp"
+
 class VertexBuffer {
 private:
     unsigned int m_rendererID;
 public:
-    VertexBuffer(const void* data, unsigned int size);
+    VertexBuffer(const void *data, unsigned long size);
     ~VertexBuffer();
 
     void Bind() const;

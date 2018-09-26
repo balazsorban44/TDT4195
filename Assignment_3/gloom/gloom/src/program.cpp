@@ -7,101 +7,14 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArrayObject.h"
+#include "OBJLoader.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-//using namespace glm
 
-//  Coordinates DATA
-
-//Task 1 b
-/*float coords[] = {
-
-        -0.24, 0, 0,
-        0.24, 0, 0,
-        0, 0.45, 0,
-
-        -0.20, -0.05, 0,
-        0, -0.45, 0,
-        0.2, -0.05, 0,
-
-        0, -0.5, 0,
-        0.5, -0.5, 0,
-        0.25,    0, 0,
-
-        -0.5, -0.5, 0,
-        0,-0.5,0,
-        -0.25,0,0,
-
-        -0.6, -0.6, 0,
-        0.6, -0.6, 0,
-        0,    0.6, 0,
-
-
-};
-
-float colors[] = {
-        1.0, 0.0, 0.8, 1.0,
-        0.8, 1.0, 0.0, 1.0,
-        0.0, 0.8, 1.0, 1.0,
-
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0,
-
-        1.0, 0.5, 0.0, 1.0,
-        0.5, 1.0, 0.8, 1.0,
-        0.8, 0.4, 1.0, 1.0,
-
-        0.8, 0.5, 0.0, 1.0,
-        0.5, 0.0, 0.8, 1.0,
-        0.8, 0.6, 1.0, 1.0,
-
-        0.0, 0.8, 0.8, 1.0,
-        0.8, 0.8, 0.0, 1.0,
-        0.8, 0.0, 0.8, 1.0,
-
-};
-
-unsigned int indices[] = {3,4,5,0,1,2,6,7,8,9,10,11,12,13,14};*/
-
-//Task 2
-float coords[] = {
-
-        -0.2, 0.45, 0.8,
-        0, 0, 0.8,
-        0.65, 0.45, 0.8,
-
-       -0.1, 0, -0.5,
-        0.5, 0, -0.5,
-        -0.3, 0.45, -0.5,
-
-        0.1, 0, 0.0,
-        0.6, 0, 0.0,
-        0.35, 0.45, 0.0
-};
-
-float colors[] = {
-
-//blue
-        0.0, 0.8, 1.0, 0.3,
-        0.0, 0.8, 1.0, 0.3,
-        0.0, 0.8, 1.0, 0.3,
-
-//yellow
-        0.8, 1.0, 0.0, 0.8,
-        0.8, 1.0, 0.0, 0.8,
-        0.8, 1.0, 0.0, 0.8,
-//pink
-        1.0, 0.0, 0.8, 0.5,
-        1.0, 0.0, 0.8, 0.5,
-        1.0, 0.0, 0.8, 0.5
-
-
-};
 
 
 unsigned int indices[] = {6,7,8,3,4,5,0,1,2};
@@ -109,8 +22,6 @@ unsigned int indices[] = {6,7,8,3,4,5,0,1,2};
 glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-1.0f); //c) a)
 
 float axisRotation[] = {0.0,0.0,0.0};  // x, y, z
-glm::mat4 rotationX = glm::mat4({{1,0,0,0},{0,1,0,0},{0,0,0,1},{0,0,0,1}} );
-glm::mat4 rotationY = glm::mat4({{1,0,0,0},{0,1,0,0},{0,0,0,1},{0,0,0,1}} );
 
 
 
@@ -124,36 +35,42 @@ void runProgram(GLFWwindow* window)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    // Configure miscellaneous OpenGL settings
-    //To see the back faces of the triangles we commented out the next line
-   // glEnable(GL_CULL_FACE);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Set up your scene here (create Vertex Array Objects, etc.)
-    VertexArrayObject vao;
 
-    VertexBuffer vb(coords, 9 * 3 * sizeof(float));
+
+    MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
+
+
+    VertexArrayObject head;
+
+
+
+
+    VertexBuffer headCoords(steve.head.vertices.data(), steve.head.vertices.size());
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE, sizeof(float) * 3, nullptr);
+    glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE, sizeof(float) * 4, nullptr);
 
-    VertexBuffer vb2(colors, 9 * 4 * sizeof(float));
+    VertexBuffer headColors(steve.head.colours.data(), steve.head.colours.size());
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1,4,GL_FLOAT,GL_FALSE, sizeof(float) * 4, nullptr);
 
-    IndexBuffer ib(indices, 9);
+    IndexBuffer ib(steve.head.indices.data(), steve.head.indices.size());
+
 
     // Activate shader
     shader.activate();
     ib.Bind();
 
-    float OsciValue = -0.5;
     glm::mat4 projection;
     glm::mat4 view;
     glm::mat4 model;
     glm::mat4 rotateX;
     glm::mat4 rotateY;
+    int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
 
     // Rendering Loop
@@ -170,16 +87,12 @@ void runProgram(GLFWwindow* window)
 
         shader.activate();
 
-      // int location_1 = glGetUniformLocation(shader.get(), "PointValue");
-        int location_2 = glGetUniformLocation(shader.get(), "cameraMatrix");
 
-      //  glUniform1f(location_1, sin(OsciValue));
-        glUniformMatrix4fv(location_2, 1,GL_FALSE,&mvp_matrix[0][0]);
+        //glUniformMatrix4fv(location, 1,GL_FALSE,&mvp_matrix[0][0]);
 
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
-
+        glDrawElements(GL_TRIANGLES, steve.head.indices.size(), GL_UNSIGNED_INT, nullptr);
 
         // Handle other events
         glfwPollEvents();
@@ -189,26 +102,12 @@ void runProgram(GLFWwindow* window)
         // Flip buffers
         glfwSwapBuffers(window);
 
-        //slightly incremented each frame (between -0.5 and 0.5)
-
-       // OsciValue+=0.01;
-
-
     }
     // Deactivate / destroy shader
     shader.deactivate();
     shader.destroy();
 }
 
-
-/*void handleKeyboardInput(GLFWwindow* window)
-{
-    // Use escape key for terminating the GLFW window
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-}*/
 
 void handleKeyboardInput(GLFWwindow* window)
 {
@@ -259,12 +158,12 @@ void handleKeyboardInput(GLFWwindow* window)
             currentMotion[0]-=0.01f;
         }
         // Use up arrow to go forward (translation)
-        if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
         {
             currentMotion[2]+=0.01f;
         }
         // Use bottom arrow to go backward (translation)
-        if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
         {
             currentMotion[2]-=0.01f;
         }

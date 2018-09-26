@@ -9,7 +9,6 @@
 #include <string>
 
 
-unsigned int setUpVAO(float* coords, unsigned int* indexes, int elementCount, int indexCount);
 // Main OpenGL program
 void runProgram(GLFWwindow* window);
 
