@@ -7,10 +7,12 @@
 #include "floats.hpp"
 #include <vector>
 
-VertexBuffer::VertexBuffer(const void *data, unsigned long size) {
+VertexBuffer::VertexBuffer(const void *data, unsigned long length, int index, int attributeSize) {
     glGenBuffers(1, &m_rendererID);
     this->Bind();
-    glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(index);
+    glVertexAttribPointer(index, attributeSize,GL_FLOAT,GL_FALSE, sizeof(float4), nullptr);
+    glBufferData(GL_ARRAY_BUFFER, length * sizeof(float4), data, GL_STATIC_DRAW);
 }
 
 

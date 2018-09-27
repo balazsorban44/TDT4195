@@ -12,7 +12,7 @@ class VertexBuffer {
 private:
     unsigned int m_rendererID;
 public:
-    VertexBuffer(const void *data, unsigned long size);
+    VertexBuffer(const void *data, unsigned long length, int index, int attributeSize);
     ~VertexBuffer();
 
     void Bind() const;

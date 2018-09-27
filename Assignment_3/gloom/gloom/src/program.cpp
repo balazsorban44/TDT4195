@@ -17,11 +17,12 @@
 
 
 
-unsigned int indices[] = {6,7,8,3,4,5,0,1,2};
 
-glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-1.0f); //c) a)
+
+glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-20.0f); //c) a)
 
 float axisRotation[] = {0.0,0.0,0.0};  // x, y, z
+
 
 
 
@@ -44,26 +45,30 @@ void runProgram(GLFWwindow* window)
 
     MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
 
+   /* float4 coords2[] = steve.head.vertices.data();
+    float4 colors2[] = steve.head.colours.data();*/
 
+
+    // Set up your scene here (create Vertex Array Objects, etc.)
     VertexArrayObject head;
+    VertexBuffer headCoords(steve.head.vertices.data(), steve.head.vertices.size(), 0, 4);
+    VertexBuffer headColors(steve.head.colours.data(), steve.head.colours.size(), 1, 4);
+    IndexBuffer headIB(steve.head.indices.data(), steve.head.indices.size());
 
+    VertexArrayObject torso;
+    VertexBuffer torsoCoords(steve.torso.vertices.data(), steve.torso.vertices.size(), 0, 4);
+    VertexBuffer torsoColors(steve.torso.colours.data(), steve.torso.colours.size(), 1, 4);
+    IndexBuffer torsoIB(steve.torso.indices.data(), steve.torso.indices.size());
 
+    VertexArrayObject leftArm;
+    VertexBuffer leftArmCoords(steve.leftArm.vertices.data(), steve.leftArm.vertices.size(), 0, 4);
+    VertexBuffer leftArmColors(steve.leftArm.colours.data(), steve.leftArm.colours.size(), 1, 4);
+    IndexBuffer leftArmIB(steve.leftArm.indices.data(), steve.leftArm.indices.size());
 
-
-    VertexBuffer headCoords(steve.head.vertices.data(), steve.head.vertices.size());
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0,4,GL_FLOAT,GL_FALSE, sizeof(float) * 4, nullptr);
-
-    VertexBuffer headColors(steve.head.colours.data(), steve.head.colours.size());
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1,4,GL_FLOAT,GL_FALSE, sizeof(float) * 4, nullptr);
-
-    IndexBuffer ib(steve.head.indices.data(), steve.head.indices.size());
 
 
     // Activate shader
     shader.activate();
-    ib.Bind();
 
     glm::mat4 projection;
     glm::mat4 view;
@@ -88,11 +93,18 @@ void runProgram(GLFWwindow* window)
         shader.activate();
 
 
-        //glUniformMatrix4fv(location, 1,GL_FALSE,&mvp_matrix[0][0]);
+        glUniformMatrix4fv(location, 1,GL_FALSE,&mvp_matrix[0][0]);
 
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glDrawElements(GL_TRIANGLES, steve.head.indices.size(), GL_UNSIGNED_INT, nullptr);
+
+        head.Bind();
+        glDrawElements(GL_TRIANGLES, steve.head.vertices.size(), GL_UNSIGNED_INT, nullptr);
+        torso.Bind();
+        glDrawElements(GL_TRIANGLES, steve.torso.vertices.size(), GL_UNSIGNED_INT, nullptr);
+
+        leftArm.Bind();
+        glDrawElements(GL_TRIANGLES, steve.leftArm.vertices.size(), GL_UNSIGNED_INT, nullptr);
 
         // Handle other events
         glfwPollEvents();
@@ -149,33 +161,33 @@ void handleKeyboardInput(GLFWwindow* window)
         // Use left arrow to move to the left the camera (translation)
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         {
-            currentMotion[0]+=0.01f;
+            currentMotion[0]+=0.5f;
         }
 
         // Use right arrow to move to the right the camera (translation)
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
         {
-            currentMotion[0]-=0.01f;
+            currentMotion[0]-=0.5f;
         }
         // Use up arrow to go forward (translation)
-        if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
         {
-            currentMotion[2]+=0.01f;
+            currentMotion[2]+=0.5f;
         }
         // Use bottom arrow to go backward (translation)
-        if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
         {
-            currentMotion[2]-=0.01f;
+            currentMotion[2]-=0.5f;
         }
 
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
         {
-            currentMotion[1]-=0.01f;
+            currentMotion[1]-=0.5f;
         }
 
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
         {
-            currentMotion[1]+=0.01f;
+            currentMotion[1]+=0.5f;
         }
 
 
