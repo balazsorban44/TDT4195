@@ -50,20 +50,12 @@ void runProgram(GLFWwindow* window)
 
 
     // Set up your scene here (create Vertex Array Objects, etc.)
-    VertexArrayObject head;
-    VertexBuffer headCoords(steve.head.vertices.data(), steve.head.vertices.size(), 0, 4);
-    VertexBuffer headColors(steve.head.colours.data(), steve.head.colours.size(), 1, 4);
-    IndexBuffer headIB(steve.head.indices.data(), steve.head.indices.size());
-
-    VertexArrayObject torso;
-    VertexBuffer torsoCoords(steve.torso.vertices.data(), steve.torso.vertices.size(), 0, 4);
-    VertexBuffer torsoColors(steve.torso.colours.data(), steve.torso.colours.size(), 1, 4);
-    IndexBuffer torsoIB(steve.torso.indices.data(), steve.torso.indices.size());
-
-    VertexArrayObject leftArm;
-    VertexBuffer leftArmCoords(steve.leftArm.vertices.data(), steve.leftArm.vertices.size(), 0, 4);
-    VertexBuffer leftArmColors(steve.leftArm.colours.data(), steve.leftArm.colours.size(), 1, 4);
-    IndexBuffer leftArmIB(steve.leftArm.indices.data(), steve.leftArm.indices.size());
+    VertexArrayObject head(steve.head);
+    VertexArrayObject torso(steve.torso);
+    VertexArrayObject leftArm(steve.leftArm);
+    VertexArrayObject rightArm(steve.rightArm);
+    VertexArrayObject leftLeg(steve.leftLeg);
+    VertexArrayObject rightLeg(steve.rightLeg);
 
 
 
@@ -102,10 +94,16 @@ void runProgram(GLFWwindow* window)
         glDrawElements(GL_TRIANGLES, steve.head.vertices.size(), GL_UNSIGNED_INT, nullptr);
         torso.Bind();
         glDrawElements(GL_TRIANGLES, steve.torso.vertices.size(), GL_UNSIGNED_INT, nullptr);
-
         leftArm.Bind();
         glDrawElements(GL_TRIANGLES, steve.leftArm.vertices.size(), GL_UNSIGNED_INT, nullptr);
 
+        rightArm.Bind();
+        glDrawElements(GL_TRIANGLES, steve.rightArm.vertices.size(), GL_UNSIGNED_INT, nullptr);
+
+        leftLeg.Bind();
+        glDrawElements(GL_TRIANGLES, steve.leftLeg.vertices.size(), GL_UNSIGNED_INT, nullptr);
+        rightLeg.Bind();
+        glDrawElements(GL_TRIANGLES, steve.rightLeg.vertices.size(), GL_UNSIGNED_INT, nullptr);
         // Handle other events
         glfwPollEvents();
         handleKeyboardInput(window);
