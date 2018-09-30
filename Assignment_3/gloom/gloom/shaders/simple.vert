@@ -6,10 +6,12 @@ layout(location = 2) out vec4 out_color;
 
 uniform mat4 cameraMatrix;
 
+uniform mat4 rotationMatrix;
+
 void main()
 {
 
-    gl_Position = cameraMatrix * position;
+    gl_Position = cameraMatrix * rotationMatrix * position ;
 
     out_color = in_color;
 }
