@@ -27,3 +27,7 @@ void VertexArrayObject::Unbind() const {
     glBindVertexArray(0);
 }
 
+int VertexArrayObject::getID() const{
+    return this->m_rendererID;
+}
+

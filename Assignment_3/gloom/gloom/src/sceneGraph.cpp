@@ -65,4 +65,3 @@ void printNode(SceneNode* node) {
 		node->referencePoint.x, node->referencePoint.y, node->referencePoint.z, 
 		node->vertexArrayObjectID);
 }
-

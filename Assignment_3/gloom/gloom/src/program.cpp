@@ -9,6 +9,7 @@
 #include "VertexArrayObject.h"
 #include "OBJLoader.hpp"
 #include "toolbox.hpp"
+#include "sceneGraph.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
@@ -25,7 +26,38 @@ glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-20.0f); //c) a)
 float axisRotation[] = {0.0,0.0,0.0};  // x, y, z
 
 
+SceneNode* createSceneGraph(int head, int torso, int leftArm, int rightArm, int leftLeg, int rightLeg, int chessboard){
 
+    // Nodes
+    SceneNode* headNode = createSceneNode();
+    headNode->vertexArrayObjectID = head;
+    SceneNode* torsoNode = createSceneNode();
+    torsoNode->vertexArrayObjectID = torso;
+    SceneNode* leftArmNode = createSceneNode();
+    leftArmNode->vertexArrayObjectID = leftArm;
+    SceneNode* rightArmNode = createSceneNode();
+    rightArmNode->vertexArrayObjectID = rightArm;
+    SceneNode* leftLegNode = createSceneNode();
+    leftLegNode->vertexArrayObjectID = leftLeg;
+    SceneNode* rightLegNode = createSceneNode();
+    rightLegNode->vertexArrayObjectID = rightLeg;
+
+    SceneNode* chessBoardNode = createSceneNode();
+    chessBoardNode->vertexArrayObjectID = chessboard;
+
+    SceneNode* rootNode = createSceneNode();
+
+    addChild(rootNode,torsoNode);
+    addChild(rootNode,chessBoardNode);
+
+    addChild(torsoNode,headNode);
+    addChild(torsoNode,leftArmNode);
+    addChild(torsoNode,rightArmNode);
+    addChild(torsoNode,leftLegNode);
+    addChild(torsoNode,rightLegNode);
+
+    return rootNode;
+}
 
 void runProgram(GLFWwindow* window)
 {
@@ -60,6 +92,18 @@ void runProgram(GLFWwindow* window)
     
     Mesh chessboardMesh = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
     VertexArrayObject chessboard(chessboardMesh);
+
+
+    SceneNode* rootNode = createSceneGraph(
+            head.getID(),
+            torso.getID(),
+            leftArm.getID(),
+            rightArm.getID(),
+            leftLeg.getID(),
+            rightLeg.getID(),
+            chessboard.getID()
+            );
+
 
 
     // Activate shader
@@ -198,5 +242,5 @@ void handleKeyboardInput(GLFWwindow* window)
 
     }
 
-
 }
+
