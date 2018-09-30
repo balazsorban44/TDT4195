@@ -7,7 +7,7 @@
 
 VertexArrayObject::VertexArrayObject(Mesh mesh) {
     glGenVertexArrays(1, &m_rendererID);
-    glBindVertexArray(m_rendererID);
+    this->Bind();
     new VertexBuffer(mesh.vertices.data(), mesh.vertices.size(), 0, 4);
     new VertexBuffer(mesh.colours.data(), mesh.colours.size(), 1, 4);
     new IndexBuffer(mesh.indices.data(), mesh.indices.size());

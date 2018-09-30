@@ -8,6 +8,7 @@
 #include "IndexBuffer.h"
 #include "VertexArrayObject.h"
 #include "OBJLoader.hpp"
+#include "toolbox.hpp"
 #include <glm/mat4x4.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
@@ -56,7 +57,9 @@ void runProgram(GLFWwindow* window)
     VertexArrayObject rightArm(steve.rightArm);
     VertexArrayObject leftLeg(steve.leftLeg);
     VertexArrayObject rightLeg(steve.rightLeg);
-
+    
+    Mesh chessboardMesh = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
+    VertexArrayObject chessboard(chessboardMesh);
 
 
     // Activate shader
@@ -90,6 +93,10 @@ void runProgram(GLFWwindow* window)
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
+
+        chessboard.Bind();
+        glDrawElements(GL_TRIANGLES, chessboardMesh.vertices.size(), GL_UNSIGNED_INT, nullptr);
         head.Bind();
         glDrawElements(GL_TRIANGLES, steve.head.vertices.size(), GL_UNSIGNED_INT, nullptr);
         torso.Bind();
