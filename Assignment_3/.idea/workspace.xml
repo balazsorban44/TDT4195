@@ -75,7 +75,7 @@
     <session id="-887017699">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="7" />
+          <entry key="project.closed" value="8" />
           <entry key="project.open.time.21" value="1" />
           <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="3" />
@@ -86,7 +86,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="3330" />
+          <entry key="cpp" value="3353" />
           <entry key="h" value="294" />
           <entry key="hpp" value="1" />
           <entry key="vert" value="59" />
@@ -95,7 +95,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="GLSL shader file" value="59" />
-          <entry key="ObjectiveC" value="3625" />
+          <entry key="ObjectiveC" value="3648" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -153,8 +153,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="246" column="14" lean-forward="true" selection-start-line="246" selection-start-column="14" selection-end-line="246" selection-end-column="14" />
+            <state relative-caret-position="437">
+              <caret line="253" column="35" selection-start-line="253" selection-start-column="27" selection-end-line="253" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -441,23 +441,22 @@
       <workItem from="1538382051754" duration="17678000" />
       <workItem from="1538421270625" duration="331000" />
       <workItem from="1538421694206" duration="4196000" />
-      <workItem from="1538425907870" duration="1300000" />
+      <workItem from="1538425907870" duration="2329000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="86665000" />
+    <option name="totallyTimeSpent" value="87694000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="86" y="43" width="2474" height="1397" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28457668" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24977699" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.24977699" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39906833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -574,8 +573,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="246" column="14" lean-forward="true" selection-start-line="246" selection-start-column="14" selection-end-line="246" selection-end-column="14" />
+        <state relative-caret-position="437">
+          <caret line="253" column="35" selection-start-line="253" selection-start-column="27" selection-end-line="253" selection-end-column="35" />
         </state>
       </provider>
     </entry>

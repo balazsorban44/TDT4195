@@ -242,16 +242,16 @@ void runProgram(GLFWwindow* window)
     while (!glfwWindowShouldClose(window))
     {
 
-        projection = glm::perspective(3.14159265359f/2, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
         model = glm::translate(translation);
         view =
              glm::rotate(model, rotate[0], glm::vec3(1, 0, 0)) *
              glm::rotate(model, rotate[1], glm::vec3(0, 1, 0));
+        projection = glm::perspective(3.14159265359f/2, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
 
-        glm::mat4 mvp_matrix = projection * view * model;
+        glm::mat4 mvp = projection * view * model;
 
 
-        glUniformMatrix4fv(location, 1, GL_FALSE, &mvp_matrix[0][0]);
+        glUniformMatrix4fv(location, 1, GL_FALSE, &mvp[0][0]);
 
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
