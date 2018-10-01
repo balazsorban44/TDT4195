@@ -159,9 +159,8 @@ void visitSceneNode(
     float refZ = node->referencePoint.z;
 
     // Torso & Head
-    if (vaoID == 2 || vaoID == 1) {
+    if (vaoID == 2 || vaoID == 1)
         currTransMat = glm::translate(glm::vec3(0, 0, increment*5));
-    }
 
     // Arms
     if (vaoID == 4 || vaoID == 3) {
@@ -205,8 +204,10 @@ void visitSceneNode(
 void runProgram(GLFWwindow* window)
 {
     Gloom::Shader shader;
-    shader.makeBasicShader("../gloom/shaders/simple.vert",
-                       "../gloom/shaders/simple.frag");
+    shader.makeBasicShader(
+            "../gloom/shaders/simple.vert",
+            "../gloom/shaders/simple.frag"
+            );
 
     // Enable depth (Z) buffer (accept "closest" fragment)
     glEnable(GL_DEPTH_TEST);
@@ -222,7 +223,7 @@ void runProgram(GLFWwindow* window)
 
     Mesh terrain = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
 
-    SceneNode* rootNode = createSceneGraph(terrain,steve);
+    SceneNode* rootNode = createSceneGraph(terrain, steve);
 
 
     // Activate shader
@@ -230,6 +231,7 @@ void runProgram(GLFWwindow* window)
 
     glm::mat4 projection;
     glm::mat4 view;
+    
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
     double increment = 0;
