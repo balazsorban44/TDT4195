@@ -56,24 +56,22 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
     SceneNode* leftArmNode = createSceneNode();
     leftArmNode->vertexArrayObjectID = leftArm.getID();
     leftArmNode->VAOIndexCount = steve.leftArm.indices.size();
-    leftArmNode->referencePoint = float3(4,20,2);
-   // leftArmNode->position = float3(0,0,0);
-    //leftArmNode->rotation = float3(0,20,2);
+    leftArmNode->referencePoint = float3(4,21,2);
 
     SceneNode* rightArmNode = createSceneNode();
     rightArmNode->vertexArrayObjectID = rightArm.getID();
     rightArmNode->VAOIndexCount = steve.rightArm.indices.size();
-    rightArmNode->referencePoint = float3(0,20,2);
+    rightArmNode->referencePoint = float3(12,21,2);
 
     SceneNode* leftLegNode = createSceneNode();
     leftLegNode->vertexArrayObjectID = leftLeg.getID();
     leftLegNode->VAOIndexCount = steve.leftLeg.indices.size();
-    leftLegNode->referencePoint = float3(2,12,2);
+    leftLegNode->referencePoint = float3(6,12,0);
 
     SceneNode* rightLegNode = createSceneNode();
     rightLegNode->vertexArrayObjectID = rightLeg.getID();
     rightLegNode->VAOIndexCount = steve.rightLeg.indices.size();
-    rightLegNode->referencePoint = float3(2,12,2);
+    rightLegNode->referencePoint = float3(2,12,0);
 
     SceneNode* chessBoardNode = createSceneNode();
     chessBoardNode->vertexArrayObjectID = chessboard.getID();
@@ -96,28 +94,31 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
 
 
 void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack) {
-
+        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack, double increment) {
 
     // Do transformations here
     pushMatrix(matrixStack,transformationThusFar);
 
-    if (node->vertexArrayObjectID == 1) {
-        node->rotation.x += 0.01;
+
+    if (node->vertexArrayObjectID == 2 || node->vertexArrayObjectID == 1) {
         node->currentTransformationMatrix=
-                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+                glm::translate(glm::vec3(0, 0, increment*5));
     }
 
-    if (node->vertexArrayObjectID == 3) {
-            node->rotation.x += 0.01;
-            node->currentTransformationMatrix=
-                    glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
-            printMatrix(glm::rotate(peekMatrix(matrixStack),node->rotation.x,glm::vec3(1,0,0)));
+    if (node->vertexArrayObjectID == 4 || node->vertexArrayObjectID == 3) {
+        int direction = node->vertexArrayObjectID == 3 ? -1 : 1;
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
+                * glm::rotate(peekMatrix(matrixStack), float(direction * sin(increment)), glm::vec3(1,0,0))
+                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
     }
-
-/*    if (node->children.size() == 0) {
-        popMatrix(matrixStack);
-    }*/
+    if (node->vertexArrayObjectID == 5 || node->vertexArrayObjectID == 6) {
+        int direction = node->vertexArrayObjectID == 6 ? -1 : 1;
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
+                * glm::rotate(peekMatrix(matrixStack), float(direction* 0.5 * sin(increment)), glm::vec3(1,0,0))
+                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+    }
 
     // Do rendering here
 
@@ -132,7 +133,7 @@ void visitSceneNode
     for
             (SceneNode* child : node->children) {
         pushMatrix(matrixStack,node->currentTransformationMatrix);
-        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack);
+        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack,increment);
         popMatrix(matrixStack);
     }
 
@@ -173,6 +174,8 @@ void runProgram(GLFWwindow* window)
     glm::mat4 rotateY;
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
+    double increment = 0;
+
 
     // Rendering Loop
     while (!glfwWindowShouldClose(window))
@@ -195,8 +198,9 @@ void runProgram(GLFWwindow* window)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+        increment += getTimeDeltaSeconds();
         std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
-        visitSceneNode(rootNode,glm::mat4(),shader.get(), matrixStack);
+        visitSceneNode(rootNode,glm::mat4(),shader.get(), matrixStack, increment);
 
 /*
         chessboard.Bind();
