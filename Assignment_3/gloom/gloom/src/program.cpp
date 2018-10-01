@@ -46,7 +46,7 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
     SceneNode* headNode = createSceneNode();
     headNode->vertexArrayObjectID = head.getID();
     headNode->VAOIndexCount = steve.head.indices.size();
-    headNode->referencePoint = float3(4,0,4);
+    headNode->referencePoint = float3(8,28,4);
 
     SceneNode* torsoNode = createSceneNode();
     torsoNode->vertexArrayObjectID = torso.getID();
@@ -56,12 +56,14 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
     SceneNode* leftArmNode = createSceneNode();
     leftArmNode->vertexArrayObjectID = leftArm.getID();
     leftArmNode->VAOIndexCount = steve.leftArm.indices.size();
-    leftArmNode->referencePoint = float3(torsoNode->position.x,0,0);
+    leftArmNode->referencePoint = float3(4,20,2);
+   // leftArmNode->position = float3(0,0,0);
+    //leftArmNode->rotation = float3(0,20,2);
 
     SceneNode* rightArmNode = createSceneNode();
     rightArmNode->vertexArrayObjectID = rightArm.getID();
     rightArmNode->VAOIndexCount = steve.rightArm.indices.size();
-    rightArmNode->referencePoint = float3(2,10,2);
+    rightArmNode->referencePoint = float3(0,20,2);
 
     SceneNode* leftLegNode = createSceneNode();
     leftLegNode->vertexArrayObjectID = leftLeg.getID();
@@ -94,44 +96,47 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
 
 
 void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID) {
-    glm::mat4 combinedTransformationMatrix;
-// Do transformations here
-
-if (node->vertexArrayObjectID == 3){
-    node->rotation.x += 0.01;
-
-    combinedTransformationMatrix =
-            glm::rotate(
-                    transformationThusFar,
-                    node->rotation.x,
-                    glm::vec3(
-                            node->referencePoint.x,
-                            node->referencePoint.y,
-                            node->referencePoint.z
-                            )
-            );
-}
-else if (node->vertexArrayObjectID == 2){
-  //  printNode(node);
-}
+        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack) {
 
 
-// Do rendering here
+    // Do transformations here
+    pushMatrix(matrixStack,transformationThusFar);
+
+    if (node->vertexArrayObjectID == 1) {
+        node->rotation.x += 0.01;
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+    }
+
+    if (node->vertexArrayObjectID == 3) {
+            node->rotation.x += 0.01;
+            node->currentTransformationMatrix=
+                    glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+            printMatrix(glm::rotate(peekMatrix(matrixStack),node->rotation.x,glm::vec3(1,0,0)));
+    }
+
+/*    if (node->children.size() == 0) {
+        popMatrix(matrixStack);
+    }*/
+
+    // Do rendering here
 
     int location = glGetUniformLocation(sceneID, "rotationMatrix");
 
     glBindVertexArray(node->vertexArrayObjectID);
 
-    glUniformMatrix4fv(location, 1,GL_FALSE,&combinedTransformationMatrix[0][0]);
+    glUniformMatrix4fv(location, 1,GL_FALSE,&node->currentTransformationMatrix[0][0]);
 
     glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
 
-
     for
             (SceneNode* child : node->children) {
-        visitSceneNode(child, combinedTransformationMatrix,sceneID);
+        pushMatrix(matrixStack,node->currentTransformationMatrix);
+        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack);
+        popMatrix(matrixStack);
     }
+
+    popMatrix(matrixStack);
 }
 
 
@@ -153,12 +158,7 @@ void runProgram(GLFWwindow* window)
 
     MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
 
-
-   /* float4 coords2[] = steve.head.vertices.data();
-    float4 colors2[] = steve.head.colours.data();*/
-
     Mesh terrain = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
-
 
     SceneNode* rootNode = createSceneGraph(terrain,steve);
 
@@ -195,7 +195,8 @@ void runProgram(GLFWwindow* window)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        visitSceneNode(rootNode,glm::mat4(),shader.get());
+        std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
+        visitSceneNode(rootNode,glm::mat4(),shader.get(), matrixStack);
 
 /*
         chessboard.Bind();
