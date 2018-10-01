@@ -231,7 +231,7 @@ void runProgram(GLFWwindow* window)
 
     glm::mat4 projection;
     glm::mat4 view;
-    
+
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
     double increment = 0;
@@ -244,8 +244,7 @@ void runProgram(GLFWwindow* window)
         projection = glm::perspective(3.14159265359f/2, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
         view =
              glm::rotate(glm::translate(model), rotate[0], glm::vec3(1, 0, 0)) *
-             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0, 1, 0)) *
-             glm::translate(model);
+             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0, 1, 0));
 
         glm::mat4 mvp_matrix = projection * view * glm::translate(model);
 
