@@ -86,7 +86,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="2931" />
+          <entry key="cpp" value="2964" />
           <entry key="h" value="294" />
           <entry key="hpp" value="1" />
           <entry key="vert" value="59" />
@@ -95,7 +95,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="GLSL shader file" value="59" />
-          <entry key="ObjectiveC" value="3226" />
+          <entry key="ObjectiveC" value="3259" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -153,8 +153,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4698">
-              <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+            <state relative-caret-position="113">
+              <caret line="175" column="24" lean-forward="true" selection-start-line="175" selection-start-column="24" selection-end-line="175" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -420,12 +420,12 @@
       <workItem from="1538312702443" duration="1453000" />
       <workItem from="1538382051754" duration="17678000" />
       <workItem from="1538421270625" duration="331000" />
-      <workItem from="1538421694206" duration="3396000" />
+      <workItem from="1538421694206" duration="3787000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84565000" />
+    <option name="totallyTimeSpent" value="84956000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="86" y="43" width="2474" height="1397" extended-state="6" />
@@ -548,8 +548,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4698">
-          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        <state relative-caret-position="113">
+          <caret line="175" column="24" lean-forward="true" selection-start-line="175" selection-start-column="24" selection-end-line="175" selection-end-column="24" />
         </state>
       </provider>
     </entry>

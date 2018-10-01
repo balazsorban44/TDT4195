@@ -141,31 +141,36 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
 }
 
 
-void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack, double increment) {
+void visitSceneNode(
+        SceneNode* node,
+        glm::mat4 transformationThusFar,
+        int sceneID,
+        std::stack<glm::mat4>* matrixStack,
+        double increment
+        ) {
 
     // Do transformations here
-    pushMatrix(matrixStack,transformationThusFar);
+    pushMatrix(matrixStack, transformationThusFar);
 
 
     if (node->vertexArrayObjectID == 2 || node->vertexArrayObjectID == 1) {
-        node->currentTransformationMatrix=
+        node->currentTransformationMatrix =
                 glm::translate(glm::vec3(0, 0, increment*5));
     }
 
     if (node->vertexArrayObjectID == 4 || node->vertexArrayObjectID == 3) {
         int direction = node->vertexArrayObjectID == 3 ? -1 : 1;
-        node->currentTransformationMatrix=
-                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
-                * glm::rotate(peekMatrix(matrixStack), float(direction * sin(increment)), glm::vec3(1,0,0))
-                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+        node->currentTransformationMatrix =
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z)) *
+                glm::rotate(peekMatrix(matrixStack), float(direction * sin(increment)), glm::vec3(1,0,0)) *
+                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
     }
     if (node->vertexArrayObjectID == 5 || node->vertexArrayObjectID == 6) {
         int direction = node->vertexArrayObjectID == 6 ? -1 : 1;
-        node->currentTransformationMatrix=
-                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
-                * glm::rotate(peekMatrix(matrixStack), float(direction* 0.5 * sin(increment)), glm::vec3(1,0,0))
-                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+        node->currentTransformationMatrix =
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z)) *
+                glm::rotate(peekMatrix(matrixStack), float(direction* 0.5 * sin(increment)), glm::vec3(1,0,0)) *
+                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
     }
 
     // Do rendering here
@@ -174,14 +179,14 @@ void visitSceneNode
 
     glBindVertexArray(node->vertexArrayObjectID);
 
-    glUniformMatrix4fv(location, 1,GL_FALSE,&node->currentTransformationMatrix[0][0]);
+    glUniformMatrix4fv(location, 1, GL_FALSE, &node->currentTransformationMatrix[0][0]);
 
     glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
 
-    for
-            (SceneNode* child : node->children) {
+    for (SceneNode* child : node->children)
+    {
         pushMatrix(matrixStack,node->currentTransformationMatrix);
-        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack,increment);
+        visitSceneNode(child, node->currentTransformationMatrix, sceneID, matrixStack, increment);
         popMatrix(matrixStack);
     }
 
@@ -228,8 +233,8 @@ void runProgram(GLFWwindow* window)
 
         projection = glm::perspective(40.0f, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
         view =
-             glm::rotate(glm::translate(model), rotate[0], glm::vec3(1,0,0)) *
-             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0,1,0)) *
+             glm::rotate(glm::translate(model), rotate[0], glm::vec3(1, 0, 0)) *
+             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0, 1, 0)) *
              glm::translate(model);
 
         glm::mat4 mvp_matrix = projection * view * glm::translate(model);
@@ -244,7 +249,7 @@ void runProgram(GLFWwindow* window)
 
         increment += getTimeDeltaSeconds();
         std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
-        visitSceneNode(rootNode,glm::mat4(),shader.get(), matrixStack, increment);
+        visitSceneNode(rootNode, glm::mat4(), shader.get(), matrixStack, increment);
 
 
         // Handle other events
