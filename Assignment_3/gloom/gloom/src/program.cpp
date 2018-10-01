@@ -128,14 +128,14 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
 
     SceneNode* rootNode = createSceneNode();
 
-    addChild(rootNode,torsoNode);
-    addChild(rootNode,chessBoardNode);
+    addChild(rootNode, torsoNode);
+    addChild(rootNode, chessBoardNode);
 
-    addChild(torsoNode,headNode);
-    addChild(torsoNode,leftArmNode);
-    addChild(torsoNode,rightArmNode);
-    addChild(torsoNode,leftLegNode);
-    addChild(torsoNode,rightLegNode);
+    addChild(torsoNode, headNode);
+    addChild(torsoNode, leftArmNode);
+    addChild(torsoNode, rightArmNode);
+    addChild(torsoNode, leftLegNode);
+    addChild(torsoNode, rightLegNode);
 
     return rootNode;
 }
@@ -152,41 +152,49 @@ void visitSceneNode(
     // Do transformations here
     pushMatrix(matrixStack, transformationThusFar);
 
+    int vaoID = node->vertexArrayObjectID;
+    glm::mat4 currTransMat = node->currentTransformationMatrix;
+    float refX = node->referencePoint.x;
+    float refY = node->referencePoint.y;
+    float refZ = node->referencePoint.z;
 
-    if (node->vertexArrayObjectID == 2 || node->vertexArrayObjectID == 1) {
-        node->currentTransformationMatrix =
-                glm::translate(glm::vec3(0, 0, increment*5));
+    // Torso & Head
+    if (vaoID == 2 || vaoID == 1) {
+        currTransMat = glm::translate(glm::vec3(0, 0, increment*5));
     }
 
-    if (node->vertexArrayObjectID == 4 || node->vertexArrayObjectID == 3) {
-        int direction = node->vertexArrayObjectID == 3 ? -1 : 1;
-        node->currentTransformationMatrix =
-                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z)) *
+    // Arms
+    if (vaoID == 4 || vaoID == 3) {
+        int direction = vaoID == 3 ? -1 : 1;
+        currTransMat =
+                glm::translate(glm::vec3(refX, refY, refZ)) *
                 glm::rotate(peekMatrix(matrixStack), float(direction * sin(increment)), glm::vec3(1,0,0)) *
-                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+                glm::translate(glm::vec3(-refX, -refY, -refZ));
     }
-    if (node->vertexArrayObjectID == 5 || node->vertexArrayObjectID == 6) {
-        int direction = node->vertexArrayObjectID == 6 ? -1 : 1;
-        node->currentTransformationMatrix =
-                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z)) *
+
+    // Legs
+    if (vaoID == 5 || vaoID == 6) {
+        int direction = vaoID == 6 ? -1 : 1;
+        currTransMat =
+                glm::translate(glm::vec3(refX, refY, refZ)) *
                 glm::rotate(peekMatrix(matrixStack), float(direction* 0.5 * sin(increment)), glm::vec3(1,0,0)) *
-                glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+                glm::translate(glm::vec3(-refX, -refY, -refZ));
     }
 
     // Do rendering here
 
     int location = glGetUniformLocation(sceneID, "rotationMatrix");
 
-    glBindVertexArray(node->vertexArrayObjectID);
+    glBindVertexArray(vaoID);
 
-    glUniformMatrix4fv(location, 1, GL_FALSE, &node->currentTransformationMatrix[0][0]);
+    glUniformMatrix4fv(location, 1, GL_FALSE, &currTransMat[0][0]);
 
     glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
 
     for (SceneNode* child : node->children)
     {
-        pushMatrix(matrixStack,node->currentTransformationMatrix);
-        visitSceneNode(child, node->currentTransformationMatrix, sceneID, matrixStack, increment);
+        pushMatrix(matrixStack,currTransMat);
+        visitSceneNode(child, currTransMat, sceneID, matrixStack, increment);
         popMatrix(matrixStack);
     }
 

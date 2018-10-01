@@ -77,16 +77,16 @@
         <counts>
           <entry key="project.closed" value="7" />
           <entry key="project.open.time.21" value="1" />
-          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="3049" />
+          <entry key="cpp" value="3235" />
           <entry key="h" value="294" />
           <entry key="hpp" value="1" />
           <entry key="vert" value="59" />
@@ -95,7 +95,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="GLSL shader file" value="59" />
-          <entry key="ObjectiveC" value="3344" />
+          <entry key="ObjectiveC" value="3530" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -153,8 +153,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="233" column="41" lean-forward="true" selection-start-line="233" selection-start-column="41" selection-end-line="233" selection-end-column="41" />
+            <state relative-caret-position="223">
+              <caret line="154" column="17" selection-start-line="154" selection-start-column="17" selection-end-line="154" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -247,6 +247,10 @@
       <find>axisRotation</find>
       <find>currentMotion</find>
       <find>) == GLFW_PRESS</find>
+      <find>node-&gt;vertexArrayObjectID</find>
+      <find>node-&gt;currentTransformationMatrix</find>
+      <find>node-&gt;referencePoint.x</find>
+      <find>node-&gt;referencePoint.z</find>
     </findStrings>
     <replaceStrings>
       <replace>Vertex</replace>
@@ -261,6 +265,12 @@
       <replace>rotate</replace>
       <replace>view0</replace>
       <replace>model</replace>
+      <replace>vaoID</replace>
+      <replace>vaoID</replace>
+      <replace>currTransMat</replace>
+      <replace>refX</replace>
+      <replace>refY</replace>
+      <replace>refZ</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -306,6 +316,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -350,7 +361,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -429,21 +439,23 @@
       <workItem from="1538382051754" duration="17678000" />
       <workItem from="1538421270625" duration="331000" />
       <workItem from="1538421694206" duration="4196000" />
+      <workItem from="1538425907870" duration="488000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="85365000" />
+    <option name="totallyTimeSpent" value="85853000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="86" y="43" width="2474" height="1397" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27954736" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.28457668" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.24977699" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24977699" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39906833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -500,9 +512,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
           <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#73#96#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -550,6 +559,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="319">
           <caret line="14" column="81" lean-forward="true" selection-start-line="14" selection-start-column="80" selection-end-line="14" selection-end-column="81" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/gloom/shader.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-609" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="154" column="17" selection-start-line="154" selection-start-column="17" selection-end-line="154" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -605,18 +626,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="638">
           <caret line="22" column="21" selection-start-line="22" selection-start-column="4" selection-end-line="22" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/gloom/shader.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-609" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="233" column="41" lean-forward="true" selection-start-line="233" selection-start-column="41" selection-end-line="233" selection-end-column="41" />
         </state>
       </provider>
     </entry>
