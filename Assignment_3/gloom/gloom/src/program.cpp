@@ -17,16 +17,64 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+double x = 0.0;
+double y = 0.0;
 
 
+auto model = glm::vec3(1.0f, 1.0f, -20.0f);
+float rotate[] = {0.0,0.0,0.0};
+
+void scroll_callback(GLFWwindow* _window, double _xoffset, double yoffset)
+{
+    model[2] += yoffset;
+}
+
+void handleInput(GLFWwindow* window)
+{
+    // Mouse inputs
+    double xCurr, yCurr;
+    glfwGetCursorPos(window, &xCurr, &yCurr);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        rotate[1] += static_cast<float>(xCurr - x)/10000;
+        rotate[0] += static_cast<float>(yCurr - y)/10000;
+    } else {
+        x = xCurr;
+        y = yCurr;
+    }
+    glfwSetScrollCallback(window, scroll_callback);
 
 
-glm::vec3 currentMotion = glm::vec3(1.0f,1.0f,-20.0f); //c) a)
+    //Keyboard inputs
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 
-float axisRotation[] = {0.0,0.0,0.0};  // x, y, z
-
-
-// Set up your scene here (create Vertex Array Objects, etc.)
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+    {
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            rotate[1] += 0.01f;
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            rotate[1] -= 0.01f;
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            rotate[0] += 0.01f;
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            rotate[0] -= 0.01f;
+    }
+    else {
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+            model[0]+=0.5f;
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+            model[0]-=0.5f;
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+            model[2]+=0.5f;
+        if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+            model[2]-=0.5f;
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+            model[1]-=0.5f;
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+            model[1]+=0.5f;
+    }
+}
 
 
 
@@ -169,9 +217,6 @@ void runProgram(GLFWwindow* window)
 
     glm::mat4 projection;
     glm::mat4 view;
-    glm::mat4 model;
-    glm::mat4 rotateX;
-    glm::mat4 rotateY;
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
     double increment = 0;
@@ -181,18 +226,17 @@ void runProgram(GLFWwindow* window)
     while (!glfwWindowShouldClose(window))
     {
 
-        projection = glm::perspective(40.0f,float(windowHeight) / float(windowWidth),1.0f,200.0f);
-        view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0,0.0,-1.0));
-        model = glm::translate(glm::mat4(1.0f), currentMotion);
-        rotateX = glm::rotate(model, axisRotation[0],glm::vec3(1,0,0));
-        rotateY = glm::rotate(model, axisRotation[1],glm::vec3(0,1,0));
+        projection = glm::perspective(40.0f, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
+        view =
+             glm::rotate(glm::translate(model), rotate[0], glm::vec3(1,0,0)) *
+             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0,1,0)) *
+             glm::translate(model);
 
-        glm::mat4 mvp_matrix = projection * rotateX * rotateY * view * model;
+        glm::mat4 mvp_matrix = projection * view * glm::translate(model);
 
         shader.activate();
 
-
-        glUniformMatrix4fv(location, 1,GL_FALSE,&mvp_matrix[0][0]);
+        glUniformMatrix4fv(location, 1, GL_FALSE, &mvp_matrix[0][0]);
 
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -202,27 +246,10 @@ void runProgram(GLFWwindow* window)
         std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
         visitSceneNode(rootNode,glm::mat4(),shader.get(), matrixStack, increment);
 
-/*
-        chessboard.Bind();
-        glDrawElements(GL_TRIANGLES, chessboardMesh.vertices.size(), GL_UNSIGNED_INT, nullptr);
-        head.Bind();
-        glDrawElements(GL_TRIANGLES, steve.head.vertices.size(), GL_UNSIGNED_INT, nullptr);
-        torso.Bind();
-        glDrawElements(GL_TRIANGLES, steve.torso.vertices.size(), GL_UNSIGNED_INT, nullptr);
-        leftArm.Bind();
-        glDrawElements(GL_TRIANGLES, steve.leftArm.vertices.size(), GL_UNSIGNED_INT, nullptr);
 
-        rightArm.Bind();
-        glDrawElements(GL_TRIANGLES, steve.rightArm.vertices.size(), GL_UNSIGNED_INT, nullptr);
-
-        leftLeg.Bind();
-        glDrawElements(GL_TRIANGLES, steve.leftLeg.vertices.size(), GL_UNSIGNED_INT, nullptr);
-        rightLeg.Bind();
-        glDrawElements(GL_TRIANGLES, steve.rightLeg.vertices.size(), GL_UNSIGNED_INT, nullptr);*/
         // Handle other events
         glfwPollEvents();
-        handleKeyboardInput(window);
-        
+        handleInput(window);
 
         // Flip buffers
         glfwSwapBuffers(window);
@@ -232,79 +259,3 @@ void runProgram(GLFWwindow* window)
     shader.deactivate();
     shader.destroy();
 }
-
-
-void handleKeyboardInput(GLFWwindow* window)
-{
-
-    // Use escape key for terminating the GLFW window
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GL_TRUE);
-    }
-
-    if( glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
-
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        {
-            axisRotation[1]+=0.01f;
-        }
-        // Use bottom arrow to go backward (translation)
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        {
-            axisRotation[1]-=0.01f;
-        }
-        // Use up arrow to go up (translation)
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        {
-            axisRotation[0]+=0.01f;
-        }
-        // Use bottom arrow to go backward (translation)
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            axisRotation[0]-=0.01f;
-        }
-
-
-
-    }
-
-    else {
-
-        // Use left arrow to move to the left the camera (translation)
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        {
-            currentMotion[0]+=0.5f;
-        }
-
-        // Use right arrow to move to the right the camera (translation)
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        {
-            currentMotion[0]-=0.5f;
-        }
-        // Use up arrow to go forward (translation)
-        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-        {
-            currentMotion[2]+=0.5f;
-        }
-        // Use bottom arrow to go backward (translation)
-        if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
-        {
-            currentMotion[2]-=0.5f;
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        {
-            currentMotion[1]-=0.5f;
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        {
-            currentMotion[1]+=0.5f;
-        }
-
-
-    }
-
-}
-
