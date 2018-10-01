@@ -21,12 +21,12 @@ double x = 0.0;
 double y = 0.0;
 
 
-auto model = glm::vec3(1.0f, -5.0f, -20.0f);
+auto translation = glm::vec3(1.0f, -5.0f, -20.0f);
 float rotate[] = {0.0,0.0,0.0};
 
 void scroll_callback(GLFWwindow* _window, double _xoffset, double yoffset)
 {
-    model[2] += yoffset;
+    translation[2] += yoffset;
 }
 
 void handleInput(GLFWwindow* window)
@@ -62,17 +62,17 @@ void handleInput(GLFWwindow* window)
     }
     else {
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-            model[0]+=0.5f;
+            translation[0]+=0.5f;
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-            model[0]-=0.5f;
+            translation[0]-=0.5f;
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
-            model[2]+=0.5f;
+            translation[2]+=0.5f;
         if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
-            model[2]-=0.5f;
+            translation[2]-=0.5f;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-            model[1]-=0.5f;
+            translation[1]-=0.5f;
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-            model[1]+=0.5f;
+            translation[1]+=0.5f;
     }
 }
 
@@ -231,6 +231,7 @@ void runProgram(GLFWwindow* window)
 
     glm::mat4 projection;
     glm::mat4 view;
+    glm::mat4 model;
 
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
@@ -242,11 +243,12 @@ void runProgram(GLFWwindow* window)
     {
 
         projection = glm::perspective(3.14159265359f/2, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
+        model = glm::translate(translation);
         view =
-             glm::rotate(glm::translate(model), rotate[0], glm::vec3(1, 0, 0)) *
-             glm::rotate(glm::translate(model), rotate[1], glm::vec3(0, 1, 0));
+             glm::rotate(model, rotate[0], glm::vec3(1, 0, 0)) *
+             glm::rotate(model, rotate[1], glm::vec3(0, 1, 0));
 
-        glm::mat4 mvp_matrix = projection * view * glm::translate(model);
+        glm::mat4 mvp_matrix = projection * view * model;
 
 
         glUniformMatrix4fv(location, 1, GL_FALSE, &mvp_matrix[0][0]);
