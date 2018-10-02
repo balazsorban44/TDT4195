@@ -15,6 +15,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/vec3.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "toolbox.hpp"
 
 
 double x = 0.0;
@@ -79,7 +80,83 @@ void handleInput(GLFWwindow* window)
 
 
 
-SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
+void visitSceneNode
+        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack, double increment, double angle, float2 direction) {
+
+    // Do transformations here
+    pushMatrix(matrixStack, transformationThusFar);
+
+    int vaoID = node->vertexArrayObjectID;
+    glm::mat4 currTransMat = node->currentTransformationMatrix;
+    float refX = node->referencePoint.x;
+    float refY = node->referencePoint.y;
+    float refZ = node->referencePoint.z;
+
+    if (node->vertexArrayObjectID == 2 || node->vertexArrayObjectID == 1) {
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(direction.x, 0.0, direction.y));
+        node->position.x += direction.x;
+        node->position.y += 0.0;
+        node->position.z += direction.y;
+    }
+
+    if (node->vertexArrayObjectID == 4 || node->vertexArrayObjectID == 3) {
+        int dir = node->vertexArrayObjectID == 3 ? -1 : 1;
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
+                * glm::rotate(peekMatrix(matrixStack), float(dir * sin(increment)), glm::vec3(1,0,0))
+                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+    }
+    if (node->vertexArrayObjectID == 5 || node->vertexArrayObjectID == 6) {
+        int dir = node->vertexArrayObjectID == 6 ? -1 : 1;
+        node->currentTransformationMatrix=
+                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
+                * glm::rotate(peekMatrix(matrixStack), float(dir* 0.5 * sin(increment)), glm::vec3(1,0,0))
+                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
+    }
+
+    // Do rendering here
+
+    int location = glGetUniformLocation(sceneID, "rotationMatrix");
+
+    glBindVertexArray(vaoID);
+
+    glUniformMatrix4fv(location, 1, GL_FALSE, &currTransMat[0][0]);
+
+    glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
+
+    for
+            (SceneNode* child : node->children) {
+        pushMatrix(matrixStack,node->currentTransformationMatrix);
+        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack,increment, angle, direction);
+        popMatrix(matrixStack);
+    }
+
+    popMatrix(matrixStack);
+}
+
+
+void runProgram(GLFWwindow* window)
+{
+    Gloom::Shader shader;
+    shader.makeBasicShader(
+            "../gloom/shaders/simple.vert",
+            "../gloom/shaders/simple.frag"
+            );
+
+    // Enable depth (Z) buffer (accept "closest" fragment)
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // Set up your scene here (create Vertex Array Objects, etc.)
+
+    MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
+
+    Mesh terrain = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
 
     VertexArrayObject head(steve.head);
     VertexArrayObject torso(steve.torso);
@@ -128,102 +205,18 @@ SceneNode* createSceneGraph(Mesh terrain, MinecraftCharacter steve){
 
     SceneNode* rootNode = createSceneNode();
 
-    addChild(rootNode, torsoNode);
-    addChild(rootNode, chessBoardNode);
+    addChild(rootNode,torsoNode);
+    addChild(rootNode,chessBoardNode);
 
-    addChild(torsoNode, headNode);
-    addChild(torsoNode, leftArmNode);
-    addChild(torsoNode, rightArmNode);
-    addChild(torsoNode, leftLegNode);
-    addChild(torsoNode, rightLegNode);
-
-    return rootNode;
-}
+    addChild(torsoNode,headNode);
+    addChild(torsoNode,leftArmNode);
+    addChild(torsoNode,rightArmNode);
+    addChild(torsoNode,leftLegNode);
+    addChild(torsoNode,rightLegNode);
+   // SceneNode* rootNode = createSceneGraph(terrain,steve);
 
 
-void visitSceneNode(
-        SceneNode* node,
-        glm::mat4 transformationThusFar,
-        int sceneID,
-        std::stack<glm::mat4>* matrixStack,
-        double increment
-        ) {
-
-    // Do transformations here
-    pushMatrix(matrixStack, transformationThusFar);
-
-    int vaoID = node->vertexArrayObjectID;
-    glm::mat4 currTransMat = node->currentTransformationMatrix;
-    float refX = node->referencePoint.x;
-    float refY = node->referencePoint.y;
-    float refZ = node->referencePoint.z;
-
-    // Torso & Head
-    if (vaoID == 2 || vaoID == 1)
-        currTransMat = glm::translate(glm::vec3(0, 0, increment*5));
-
-    // Arms
-    if (vaoID == 4 || vaoID == 3) {
-        int direction = vaoID == 3 ? -1 : 1;
-        currTransMat =
-                glm::translate(glm::vec3(refX, refY, refZ)) *
-                glm::rotate(peekMatrix(matrixStack), float(direction * sin(increment)), glm::vec3(1,0,0)) *
-                glm::translate(glm::vec3(-refX, -refY, -refZ));
-    }
-
-    // Legs
-    if (vaoID == 5 || vaoID == 6) {
-        int direction = vaoID == 6 ? -1 : 1;
-        currTransMat =
-                glm::translate(glm::vec3(refX, refY, refZ)) *
-                glm::rotate(peekMatrix(matrixStack), float(direction* 0.5 * sin(increment)), glm::vec3(1,0,0)) *
-                glm::translate(glm::vec3(-refX, -refY, -refZ));
-    }
-
-    // Do rendering here
-
-    int location = glGetUniformLocation(sceneID, "rotationMatrix");
-
-    glBindVertexArray(vaoID);
-
-    glUniformMatrix4fv(location, 1, GL_FALSE, &currTransMat[0][0]);
-
-    glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
-
-    for (SceneNode* child : node->children)
-    {
-        pushMatrix(matrixStack,currTransMat);
-        visitSceneNode(child, currTransMat, sceneID, matrixStack, increment);
-        popMatrix(matrixStack);
-    }
-
-    popMatrix(matrixStack);
-}
-
-
-void runProgram(GLFWwindow* window)
-{
-    Gloom::Shader shader;
-    shader.makeBasicShader(
-            "../gloom/shaders/simple.vert",
-            "../gloom/shaders/simple.frag"
-            );
-
-    // Enable depth (Z) buffer (accept "closest" fragment)
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-
-
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    // Set up your scene here (create Vertex Array Objects, etc.)
-
-    MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
-
-    Mesh terrain = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
-
-    SceneNode* rootNode = createSceneGraph(terrain, steve);
+    Path path("../gloom/paths/coordinates_1.txt");
 
 
     // Activate shader
@@ -236,7 +229,9 @@ void runProgram(GLFWwindow* window)
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
     double increment = 0;
-
+    double angle;
+    float2 direction = float2();
+    float2 currentPosition = float2(torsoNode->position.x,torsoNode->position.z);
 
     // Rendering Loop
     while (!glfwWindowShouldClose(window))
@@ -259,7 +254,23 @@ void runProgram(GLFWwindow* window)
 
         increment += getTimeDeltaSeconds();
         std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
-        visitSceneNode(rootNode, glm::mat4(), shader.get(), matrixStack, increment);
+
+        if (path.hasWaypointBeenReached(currentPosition, 16.0f)){
+            path.advanceToNextWaypoint();
+        }
+        else {
+            angle = atan2((currentPosition.y - path.getCurrentWaypoint(16.0f).y), (currentPosition.x - path.getCurrentWaypoint(16.0f)).x);
+            std::cout << direction.x << "  " << direction.y << std::endl;
+            direction.x = (path.getCurrentWaypoint(16.0f).x - currentPosition.x);
+            direction.y = (path.getCurrentWaypoint(16.0f).y - currentPosition.y);
+            currentPosition.x += currentPosition.x * direction.x;
+            currentPosition.y += currentPosition.y * direction.y;
+        }
+
+
+
+        visitSceneNode(rootNode, glm::mat4(), shader.get(), matrixStack, increment, angle, direction);
+
 
 
         // Handle other events
