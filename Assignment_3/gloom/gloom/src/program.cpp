@@ -94,7 +94,7 @@ void visitSceneNode
 
     currTransMat=
             glm::translate(glm::vec3(refX, refY, refZ))
-            * glm::rotate(peekMatrix(matrixStack),float(sin(node->rotation.x)), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
+            * glm::rotate(peekMatrix(matrixStack),float(pow(-1,vaoID) * sin(node->rotation.x)), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
             *  glm::translate(glm::vec3(-refX, -refY, -refZ));
 
     std::cout << node->rotation.x << std::endl;
