@@ -81,7 +81,7 @@ void handleInput(GLFWwindow* window)
 
 
 void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack) {
+        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack, float angle) {
 
     // Do transformations here
     pushMatrix(matrixStack, transformationThusFar);
@@ -94,7 +94,7 @@ void visitSceneNode
 
     currTransMat=
             glm::translate(glm::vec3(refX, refY, refZ))
-            * glm::rotate(peekMatrix(matrixStack),float(pow(-1,vaoID) * node->rotation.x), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
+            * glm::rotate(peekMatrix(matrixStack),float(angle), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
             *  glm::translate(glm::vec3(-refX, -refY, -refZ));
 
     std::cout << node->rotation.x << std::endl;
