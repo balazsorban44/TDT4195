@@ -62,17 +62,17 @@ void handleInput(GLFWwindow* window)
             rotate[0] -= 0.01f;
     }
     else {
-        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             translation[0]+=0.5f;
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             translation[0]-=0.5f;
-        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
             translation[2]+=0.5f;
-        if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
             translation[2]-=0.5f;
-        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             translation[1]-=0.5f;
-        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             translation[1]+=0.5f;
     }
 }
@@ -98,9 +98,6 @@ void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneI
     float rotZ = node->rotation.z;
 
 
-    if (node->vertexArrayObjectID == 3)
-        printNode(node);
-        printMatrix(transformationThusFar);
 
     trs =
             glm::translate(glm::vec3(posX, posY, posZ)) *
@@ -112,7 +109,9 @@ void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneI
             ) *
             glm::translate(glm::vec3(-refX, -refY, -refZ));
 
-    pushMatrix(matrixStack, transformationThusFar * trs);
+    pushMatrix(matrixStack, trs);
+
+    printMatrix(peekMatrix(matrixStack));
 
     // Do rendering here
 
