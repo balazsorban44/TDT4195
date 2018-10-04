@@ -78,43 +78,52 @@ void handleInput(GLFWwindow* window)
 }
 
 
+auto matrixStack = createEmptyMatrixStack();
 
-
-void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack) {
+void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneID)
+{
 
     // Do transformations here
-    pushMatrix(matrixStack, transformationThusFar);
 
     int vaoID = node->vertexArrayObjectID;
-    glm::mat4 currTransMat = node->currentTransformationMatrix;
+    glm::mat4 trs = node->currentTransformationMatrix;
     float refX = node->referencePoint.x;
     float refY = node->referencePoint.y;
     float refZ = node->referencePoint.z;
+    float posX = node->position.x;
+    float posY = node->position.y;
+    float posZ = node->position.z;
+    float rotX = node->rotation.x;
+    float rotY = node->rotation.y;
+    float rotZ = node->rotation.z;
 
-    currTransMat=
-            glm::translate(glm::vec3(refX, refY, refZ))
-            * glm::rotate(peekMatrix(matrixStack),float(pow(-1,vaoID) * sin(node->rotation.x)), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
-            *  glm::translate(glm::vec3(-refX, -refY, -refZ));
 
-    std::cout << node->rotation.x << std::endl;
+    if (node->vertexArrayObjectID == 3)
+        printNode(node);
+        printMatrix(transformationThusFar);
+
+    trs =
+            glm::translate(glm::vec3(posX, posY, posZ)) *
+            glm::translate(glm::vec3(refX, refY, refZ)) *
+            glm::rotate(
+                transformationThusFar,
+                cos(rotX),
+                glm::vec3(rotX, rotY, rotZ)
+            ) *
+            glm::translate(glm::vec3(-refX, -refY, -refZ));
+
+    pushMatrix(matrixStack, transformationThusFar * trs);
 
     // Do rendering here
 
     int location = glGetUniformLocation(sceneID, "rotationMatrix");
-
     glBindVertexArray(vaoID);
-
-    glUniformMatrix4fv(location, 1, GL_FALSE, &currTransMat[0][0]);
-
+    glUniformMatrix4fv(location, 1, GL_FALSE, &peekMatrix(matrixStack)[0][0]);
     glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
 
-    for
-            (SceneNode* child : node->children) {
-        pushMatrix(matrixStack,currTransMat);
-        visitSceneNode(child,node->currentTransformationMatrix,sceneID,matrixStack);
-        popMatrix(matrixStack);
-    }
+
+    for (SceneNode* child : node->children)
+        visitSceneNode(child, node->currentTransformationMatrix, sceneID);
 
     popMatrix(matrixStack);
 }
@@ -157,16 +166,18 @@ void runProgram(GLFWwindow* window)
     headNode->VAOIndexCount = steve.head.indices.size();
     headNode->referencePoint = float3(8,28,4);
  //   headNode->referencePoint = float3(0,0,0);
-    headNode->rotation.y = 1.0;
    // headNode->position = float3(0,0,0);
+    headNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
+
 
     SceneNode* torsoNode = createSceneNode();
     torsoNode->vertexArrayObjectID = torso.getID();
     torsoNode->VAOIndexCount = steve.torso.indices.size();
     torsoNode->referencePoint  = float3(4,0,2);
  //   torsoNode->referencePoint = float3(0,0,0);
-    torsoNode->rotation.y = 1.0;
   //  torsoNode->position = float3(0,1,0);
+    torsoNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
+
 
     SceneNode* leftArmNode = createSceneNode();
     leftArmNode->vertexArrayObjectID = leftArm.getID();
@@ -200,7 +211,7 @@ void runProgram(GLFWwindow* window)
     chessBoardNode->vertexArrayObjectID = chessboard.getID();
     chessBoardNode->VAOIndexCount = terrain.indices.size();
     chessBoardNode->referencePoint = float3(0,0,0);
-    chessBoardNode->rotation = float3(0,0,1);
+    chessBoardNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
 
     SceneNode* rootNode = createSceneNode();
 
@@ -255,35 +266,15 @@ void runProgram(GLFWwindow* window)
 
         increment += getTimeDeltaSeconds();
 
-/*        if (path.hasWaypointBeenReached(currentPosition, 16.0f)){
-            path.advanceToNextWaypoint();
-        }
-        else {
-            angle = atan2((currentPosition.y - path.getCurrentWaypoint(16.0f).y), (currentPosition.x - path.getCurrentWaypoint(16.0f)).x);
-          //  std::cout << direction.x << "  " << direction.y << std::endl;
-            direction.x = (path.getCurrentWaypoint(16.0f).x - currentPosition.x);
-            direction.y = (path.getCurrentWaypoint(16.0f).y - currentPosition.y);
-            currentPosition.x += currentPosition.x * direction.x;
-            currentPosition.y += currentPosition.y * direction.y;
-            currentPosition.x = torsoNode->position.x;
-            currentPosition.y = torsoNode->position.z;
-
-        }*/
-
-        std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
-
-
-
-       // torsoAngle = float(sin(increment));
-
-       // std::cout << rightLegNode->rotation.x << std::endl;
 
         leftArmNode->rotation.x = float(-increment);
         rightArmNode->rotation.x = float(increment);
         leftLegNode->rotation.x = float(0.5*increment);
         rightLegNode->rotation.x = float(-0.5*increment);
 
-        visitSceneNode(rootNode, rootNode->currentTransformationMatrix, shader.get(), matrixStack);
+        torsoNode->position.z = 16;
+
+        visitSceneNode(rootNode, glm::mat4() , shader.get());
 
 
 

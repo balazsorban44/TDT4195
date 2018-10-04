@@ -101,7 +101,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="cpp" value="3353" />
+          <entry key="cpp" value="4515" />
           <entry key="h" value="294" />
           <entry key="hpp" value="1" />
           <entry key="vert" value="59" />
@@ -110,15 +110,15 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="GLSL shader file" value="59" />
-          <entry key="ObjectiveC" value="3648" />
+          <entry key="ObjectiveC" value="4810" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="cpp" value="10" />
+          <entry key="cpp" value="11" />
           <entry key="frag" value="1" />
-          <entry key="h" value="8" />
-          <entry key="hpp" value="3" />
+          <entry key="h" value="9" />
+          <entry key="hpp" value="5" />
           <entry key="obj" value="1" />
           <entry key="vert" value="1" />
         </counts>
@@ -126,7 +126,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="GLSL shader file" value="2" />
-          <entry key="ObjectiveC" value="21" />
+          <entry key="ObjectiveC" value="25" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
@@ -174,8 +174,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="96" column="72" selection-start-line="96" selection-start-column="72" selection-end-line="96" selection-end-column="72" />
+            <state relative-caret-position="402">
+              <caret line="125" column="4" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///usr/include/math.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="227">
+              <caret line="1067" column="9" selection-start-line="1067" selection-start-column="9" selection-end-line="1067" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -183,7 +192,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/toolbox.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="555">
+            <state relative-caret-position="152">
               <caret line="37" selection-start-line="37" selection-end-line="37" />
               <folding>
                 <element signature="e#14#39#0" expanded="true" />
@@ -193,10 +202,12 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gloom/gloom/src/floats.hpp">
+        <entry file="file://$PROJECT_DIR$/gloom/gloom/src/toolbox.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="20" selection-start-line="19" selection-start-column="20" selection-end-line="19" selection-end-column="20" />
+            <state relative-caret-position="-4460">
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -204,8 +215,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/src/sceneGraph.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="55">
-              <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+            <state relative-caret-position="899">
+              <caret line="31" column="86" selection-start-line="31" selection-start-column="86" selection-end-line="31" selection-end-column="86" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -225,29 +236,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/gloom/gloom/shaders/simple.vert">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" selection-start-line="9" selection-end-line="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gloom/gloom/src/VertexArrayObject.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="22" selection-start-line="20" selection-start-column="22" selection-end-line="20" selection-end-column="22" />
-              <folding>
-                <element signature="e#109#134#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/gloom/gloom/src/VertexArrayObject.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="29" selection-start-line="29" selection-end-line="31" selection-end-column="1" />
+            <state relative-caret-position="377">
+              <caret line="13" column="47" selection-start-line="13" selection-start-column="47" selection-end-line="13" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -317,8 +307,8 @@
         <option value="$PROJECT_DIR$/gloom/gloom/src/VertexBuffer.cpp" />
         <option value="$PROJECT_DIR$/gloom/gloom/src/VertexArrayObject.cpp" />
         <option value="$PROJECT_DIR$/gloom/gloom/src/VertexArrayObject.h" />
-        <option value="$PROJECT_DIR$/gloom/gloom/src/sceneGraph.cpp" />
         <option value="$PROJECT_DIR$/gloom/gloom/shaders/simple.vert" />
+        <option value="$PROJECT_DIR$/gloom/gloom/src/sceneGraph.cpp" />
         <option value="$PROJECT_DIR$/gloom/gloom/src/program.cpp" />
       </list>
     </option>
@@ -342,6 +332,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -365,13 +356,6 @@
               <item name="Assignment_3" type="462c0819:PsiDirectoryNode" />
               <item name="gloom" type="462c0819:PsiDirectoryNode" />
               <item name="gloom" type="462c0819:PsiDirectoryNode" />
-              <item name="paths" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="gloom" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Assignment_3" type="462c0819:PsiDirectoryNode" />
-              <item name="gloom" type="462c0819:PsiDirectoryNode" />
-              <item name="gloom" type="462c0819:PsiDirectoryNode" />
               <item name="shaders" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -385,7 +369,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -469,18 +452,18 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="105350000" />
+    <option name="totallyTimeSpent" value="111224000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="64" y="-11" width="1303" height="780" extended-state="6" />
+    <frame x="86" y="43" width="2474" height="1397" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2685259" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26823136" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.24844721" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3541481" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39906833" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -600,16 +583,6 @@
     <entry file="file://$PROJECT_DIR$/gloom/gloom/paths/coordinates_1.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/toolbox.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" selection-start-line="37" selection-end-line="37" />
-          <folding>
-            <element signature="e#14#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/src/floats.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
@@ -619,8 +592,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/shaders/simple.vert">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        <state relative-caret-position="377">
+          <caret line="13" column="47" selection-start-line="13" selection-start-column="47" selection-end-line="13" selection-end-column="47" />
         </state>
       </provider>
     </entry>
@@ -641,12 +614,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/toolbox.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+          <folding>
+            <element signature="e#14#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/src/sceneGraph.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="20" column="1" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
+        <state relative-caret-position="899">
+          <caret line="31" column="86" selection-start-line="31" selection-start-column="86" selection-end-line="31" selection-end-column="86" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/gloom/gloom/src/toolbox.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4460">
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -658,10 +650,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/include/math.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="227">
+          <caret line="1067" column="9" selection-start-line="1067" selection-start-column="9" selection-end-line="1067" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/gloom/gloom/src/program.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="96" column="72" selection-start-line="96" selection-start-column="72" selection-end-line="96" selection-end-column="72" />
+        <state relative-caret-position="402">
+          <caret line="125" column="4" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="4" />
         </state>
       </provider>
     </entry>

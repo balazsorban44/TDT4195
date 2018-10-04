@@ -29,7 +29,7 @@ glm::mat4 peekMatrix(std::stack<glm::mat4>* stack) {
 void printMatrix(glm::mat4 matrix) {
 	float* values = glm::value_ptr(matrix);
 
-	printf("(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n",
+	printf("(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n(%f, %f, %f, %f)\n\n",
 		values[0], values[4], values[8], values[12], 
 		values[1], values[5], values[9], values[13], 
 		values[2], values[6], values[10], values[14], 
