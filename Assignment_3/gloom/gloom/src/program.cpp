@@ -81,7 +81,7 @@ void handleInput(GLFWwindow* window)
 
 
 void visitSceneNode
-        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack, float angle) {
+        (SceneNode* node, glm::mat4 transformationThusFar, int sceneID, std::stack<glm::mat4>* matrixStack) {
 
     // Do transformations here
     pushMatrix(matrixStack, transformationThusFar);
@@ -94,32 +94,11 @@ void visitSceneNode
 
     currTransMat=
             glm::translate(glm::vec3(refX, refY, refZ))
-            * glm::rotate(peekMatrix(matrixStack),float(angle), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
+            * glm::rotate(peekMatrix(matrixStack),float(sin(node->rotation.x)), glm::vec3(node->rotation.x,node->rotation.y,node->rotation.z))
             *  glm::translate(glm::vec3(-refX, -refY, -refZ));
 
     std::cout << node->rotation.x << std::endl;
-    
 
- /*   if (node->vertexArrayObjectID == 2 || node->vertexArrayObjectID == 1) {
-        node->currentTransformationMatrix=
-                glm::translate(glm::vec3(direction.x, 0.0, direction.y));
-        node->position.x += direction.x;
-        node->position.y += 0.0;
-        node->position.z += direction.y;
-    }
-
-    if (node->vertexArrayObjectID == 4 || node->vertexArrayObjectID == 3) {
-        int dir = node->vertexArrayObjectID == 3 ? -1 : 1;
-
-    }
-    if (node->vertexArrayObjectID == 5 || node->vertexArrayObjectID == 6) {
-        int dir = node->vertexArrayObjectID == 6 ? -1 : 1;
-        node->currentTransformationMatrix=
-                glm::translate(glm::vec3(node->referencePoint.x, node->referencePoint.y, node->referencePoint.z))
-                * glm::rotate(peekMatrix(matrixStack), float(dir* 0.5 * sin(increment)), glm::vec3(1,0,0))
-                *  glm::translate(glm::vec3(-node->referencePoint.x, -node->referencePoint.y, -node->referencePoint.z));
-    }
-*/
     // Do rendering here
 
     int location = glGetUniformLocation(sceneID, "rotationMatrix");
@@ -252,6 +231,7 @@ void runProgram(GLFWwindow* window)
     double angle;
     float2 direction = float2();
     float2 currentPosition = float2(torsoNode->position.x,torsoNode->position.z);
+    float torsoAngle = 0;
 
 
     // Rendering Loop
@@ -288,27 +268,23 @@ void runProgram(GLFWwindow* window)
             currentPosition.x = torsoNode->position.x;
             currentPosition.y = torsoNode->position.z;
 
-
-
         }*/
 
         std::stack<glm::mat4>* matrixStack = createEmptyMatrixStack();
 
-        leftArmNode->rotation.x = float(-1 * sin(increment));
-        rightArmNode->rotation.x = float(1 * sin(increment));
-        leftLegNode->rotation.x = float(1 *0.5 * sin(increment));
-        rightLegNode->rotation.x = float(-1 *0.5 * sin(increment));
 
-        torsoNode->rotation.x = float(sin(increment));
+
+       // torsoAngle = float(sin(increment));
 
        // std::cout << rightLegNode->rotation.x << std::endl;
 
-    /*    glBindVertexArray(chessBoardNode->vertexArrayObjectID);
-
-        glDrawElements(GL_TRIANGLES, chessBoardNode->VAOIndexCount, GL_UNSIGNED_INT, nullptr);*/
-
+        leftArmNode->rotation.x = float(-increment);
+        rightArmNode->rotation.x = float(increment);
+        leftLegNode->rotation.x = float(0.5*increment);
+        rightLegNode->rotation.x = float(-0.5*increment);
 
         visitSceneNode(rootNode, rootNode->currentTransformationMatrix, shader.get(), matrixStack);
+
 
 
 
