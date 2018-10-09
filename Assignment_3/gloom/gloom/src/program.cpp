@@ -98,33 +98,27 @@ void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneI
     float rotZ = node->rotation.z;
 
 
-
-    trs =
+    node->currentTransformationMatrix =
+            transformationThusFar *
             glm::translate(glm::vec3(posX, posY, posZ)) *
             glm::translate(glm::vec3(refX, refY, refZ)) *
-            glm::rotate(
-                transformationThusFar,
-                cos(rotX),
-                glm::vec3(rotX, rotY, rotZ)
-            ) *
+            glm::rotate(glm::mat4(),  rotX, glm::vec3(1, 0, 0)) *
+            glm::rotate(glm::mat4(), rotY, glm::vec3(0, 1, 0)) *
+            glm::rotate(glm::mat4(), rotZ, glm::vec3(0, 0, 1)) *
             glm::translate(glm::vec3(-refX, -refY, -refZ));
 
-    pushMatrix(matrixStack, trs);
-
-    printMatrix(peekMatrix(matrixStack));
 
     // Do rendering here
 
     int location = glGetUniformLocation(sceneID, "rotationMatrix");
     glBindVertexArray(vaoID);
-    glUniformMatrix4fv(location, 1, GL_FALSE, &peekMatrix(matrixStack)[0][0]);
+    glUniformMatrix4fv(location, 1, GL_FALSE, &node->currentTransformationMatrix[0][0]);
     glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
 
 
     for (SceneNode* child : node->children)
         visitSceneNode(child, node->currentTransformationMatrix, sceneID);
 
-    popMatrix(matrixStack);
 }
 
 
@@ -164,53 +158,38 @@ void runProgram(GLFWwindow* window)
     headNode->vertexArrayObjectID = head.getID();
     headNode->VAOIndexCount = steve.head.indices.size();
     headNode->referencePoint = float3(8,28,4);
- //   headNode->referencePoint = float3(0,0,0);
-   // headNode->position = float3(0,0,0);
-    headNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
 
 
     SceneNode* torsoNode = createSceneNode();
     torsoNode->vertexArrayObjectID = torso.getID();
     torsoNode->VAOIndexCount = steve.torso.indices.size();
     torsoNode->referencePoint  = float3(4,0,2);
- //   torsoNode->referencePoint = float3(0,0,0);
-  //  torsoNode->position = float3(0,1,0);
-    torsoNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
 
 
     SceneNode* leftArmNode = createSceneNode();
     leftArmNode->vertexArrayObjectID = leftArm.getID();
     leftArmNode->VAOIndexCount = steve.leftArm.indices.size();
     leftArmNode->referencePoint = float3(4,21,2);
-    leftArmNode->rotation.x = -1 * sin(0.1);
- //   leftArmNode->position = float3(1,0,0);
+
 
     SceneNode* rightArmNode = createSceneNode();
     rightArmNode->vertexArrayObjectID = rightArm.getID();
     rightArmNode->VAOIndexCount = steve.rightArm.indices.size();
     rightArmNode->referencePoint = float3(12,21,2);
-    rightArmNode->rotation.x = 1 * sin(0.1);
-  //  rightArmNode->position = float3(1,0,0);
 
     SceneNode* leftLegNode = createSceneNode();
     leftLegNode->vertexArrayObjectID = leftLeg.getID();
     leftLegNode->VAOIndexCount = steve.leftLeg.indices.size();
     leftLegNode->referencePoint = float3(6,12,0);
-    leftLegNode->rotation.x = 1 *0.5 * sin(0.1);
-   // leftLegNode->position = float3(1,0,0);
 
     SceneNode* rightLegNode = createSceneNode();
     rightLegNode->vertexArrayObjectID = rightLeg.getID();
     rightLegNode->VAOIndexCount = steve.rightLeg.indices.size();
     rightLegNode->referencePoint = float3(2,12,0);
-    rightLegNode->rotation.x = -1 *0.5 * sin(0.1);
-  //  rightLegNode->position = float3(1,0,0);
 
     SceneNode* chessBoardNode = createSceneNode();
     chessBoardNode->vertexArrayObjectID = chessboard.getID();
     chessBoardNode->VAOIndexCount = terrain.indices.size();
-    chessBoardNode->referencePoint = float3(0,0,0);
-    chessBoardNode->rotation = float3(M_PI/2,M_PI/2, M_PI/2);
 
     SceneNode* rootNode = createSceneNode();
 
@@ -266,14 +245,15 @@ void runProgram(GLFWwindow* window)
         increment += getTimeDeltaSeconds();
 
 
-        leftArmNode->rotation.x = float(-increment);
-        rightArmNode->rotation.x = float(increment);
-        leftLegNode->rotation.x = float(0.5*increment);
-        rightLegNode->rotation.x = float(-0.5*increment);
+        leftArmNode->rotation.x = -cos(increment)*0.5;
+        rightArmNode->rotation.x = cos(increment)*0.5;
+        leftLegNode->rotation.x = cos(increment)*0.25;
+        rightLegNode->rotation.x = -cos(increment)*0.25;
 
-        torsoNode->position.z = 16;
+        torsoNode->position.z = increment*5;
+        torsoNode->rotation.y = increment;
 
-        visitSceneNode(rootNode, glm::mat4() , shader.get());
+        visitSceneNode(rootNode, glm::mat4(), shader.get());
 
 
 
