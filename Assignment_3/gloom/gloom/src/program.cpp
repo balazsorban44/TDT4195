@@ -20,7 +20,7 @@
 
 double x = 0.0;
 double y = 0.0;
-
+float tileWidth = 16.0f;
 
 auto translation = glm::vec3(1.0f, -5.0f, -20.0f);
 float rotate[] = {0.0,0.0,0.0};
@@ -142,7 +142,7 @@ void runProgram(GLFWwindow* window)
 
     MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
 
-    Mesh terrain = generateChessboard(7, 5, 16.0f, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
+    Mesh terrain = generateChessboard(7, 5, tileWidth, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
 
     VertexArrayObject head(steve.head);
     VertexArrayObject torso(steve.torso);
@@ -217,11 +217,8 @@ void runProgram(GLFWwindow* window)
     int location = glGetUniformLocation(shader.get(), "cameraMatrix");
 
     double increment = 0;
-    double angle;
-    float2 direction = float2();
-    float2 currentPosition = float2(torsoNode->position.x,torsoNode->position.z);
-    float torsoAngle = 0;
 
+    
 
     // Rendering Loop
     while (!glfwWindowShouldClose(window))
@@ -242,16 +239,56 @@ void runProgram(GLFWwindow* window)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
+        /**
+         * Get that increment increasing
+         */
         increment += getTimeDeltaSeconds();
 
+        /**
+         * Swinging the arms and legs
+         * NOTE: Legs are swinging less because it looks more natural
+         */
+        leftArmNode->rotation.x = static_cast<float>(-cos(increment) * 0.5);
+        rightArmNode->rotation.x = static_cast<float>(cos(increment) * 0.5);
+        leftLegNode->rotation.x = static_cast<float>(cos(increment) * 0.25);
+        rightLegNode->rotation.x = static_cast<float>(-cos(increment) * 0.25);
 
-        leftArmNode->rotation.x = -cos(increment)*0.5;
-        rightArmNode->rotation.x = cos(increment)*0.5;
-        leftLegNode->rotation.x = cos(increment)*0.25;
-        rightLegNode->rotation.x = -cos(increment)*0.25;
+        
+        /**
+         * Follow the path
+         */
+         
+        if(path.hasWaypointBeenReached(float2(torsoNode->position.x, torsoNode->position.z), tileWidth))
+            path.advanceToNextWaypoint();
 
-        torsoNode->position.z = increment*5;
-        torsoNode->rotation.y = increment;
+        std::cout <<
+          path.getCurrentWaypoint(tileWidth) << " " <<
+          float2(torsoNode->position.x, torsoNode->position.z) <<
+          "\n";
+
+        float dx = tileWidth*path.getCurrentWaypoint(tileWidth).x - torsoNode->position.x;
+        float dy = tileWidth*path.getCurrentWaypoint(tileWidth).y - torsoNode->position.z;
+        float length = sqrtf(dx*dx+dy*dy);
+
+        dx/=length;
+        dy/=length;
+        dx *= increment;
+        dy *= increment;
+        torsoNode->position.x = dx;
+        torsoNode->position.z = dy;
+
+        /*
+        if (path.getCurrentWaypoint(tileWidth).x > torsoNode->position.x) {
+            torsoNode->position.x = static_cast<float>(increment*2);
+        } else {
+            torsoNode->position.x = path.getCurrentWaypoint(tileWidth).x;
+        }
+        if (path.getCurrentWaypoint(tileWidth).y > torsoNode->position.z) {
+            torsoNode->position.z = static_cast<float>(increment*2);
+        } else {
+            torsoNode->position.z = path.getCurrentWaypoint(tileWidth).y;
+        }
+        */
 
         visitSceneNode(rootNode, glm::mat4(), shader.get());
 
