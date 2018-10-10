@@ -18,16 +18,28 @@
 #include "toolbox.hpp"
 
 
+/**
+ * Change the path easily by changing the number on line 25.
+ * 0, 1, or 2
+ */
+std::string coordPath = "../gloom/paths/coordinates_1.txt";
+
+
 double x = 0.0;
 double y = 0.0;
+
+/**
+ * Width and height of a single chessboard tile
+ */
 float tileWidth = 16.0f;
 
-auto translation = glm::vec3(1.0f, -5.0f, -20.0f);
-float rotate[] = {0.0,0.0,0.0};
+glm::vec3 translation(-tileWidth * 2, -tileWidth, -8 * tileWidth);
+
+glm::vec2 rotate;
 
 void scroll_callback(GLFWwindow* _window, double _xoffset, double yoffset)
 {
-    translation[2] += yoffset;
+    translation[2] += yoffset*4;
 }
 
 void handleInput(GLFWwindow* window)
@@ -37,13 +49,14 @@ void handleInput(GLFWwindow* window)
     glfwGetCursorPos(window, &xCurr, &yCurr);
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
-        rotate[1] += static_cast<float>(xCurr - x)/10000;
-        rotate[0] += static_cast<float>(yCurr - y)/10000;
+        rotate.y += static_cast<float>(xCurr - x)/5000;
+        rotate.x += static_cast<float>(yCurr - y)/5000;
     } else {
         x = xCurr;
         y = yCurr;
     }
     glfwSetScrollCallback(window, scroll_callback);
+
 
 
     //Keyboard inputs
@@ -53,71 +66,72 @@ void handleInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
     {
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-            rotate[1] += 0.01f;
+            rotate.y += 0.05f;
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-            rotate[1] -= 0.01f;
+            rotate.y -= 0.05f;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-            rotate[0] += 0.01f;
+            rotate.x += 0.05f;
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-            rotate[0] -= 0.01f;
+            rotate.x -= 0.05f;
     }
     else {
         if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            translation[0]+=0.5f;
+            translation.x+=1;
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            translation[0]-=0.5f;
+            translation.x-=1;
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            translation[2]+=0.5f;
+            translation.z+=1;
         if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-            translation[2]-=0.5f;
+            translation.z-=1;
         if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            translation[1]-=0.5f;
+            translation.y-=1;
         if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            translation[1]+=0.5f;
+            translation.y+=1;
     }
 }
 
 
 auto matrixStack = createEmptyMatrixStack();
 
-void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneID)
+void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, Gloom::Shader* shader)
 {
 
-    // Do transformations here
 
     int vaoID = node->vertexArrayObjectID;
-    glm::mat4 trs = node->currentTransformationMatrix;
-    float refX = node->referencePoint.x;
-    float refY = node->referencePoint.y;
-    float refZ = node->referencePoint.z;
-    float posX = node->position.x;
-    float posY = node->position.y;
-    float posZ = node->position.z;
-    float rotX = node->rotation.x;
-    float rotY = node->rotation.y;
-    float rotZ = node->rotation.z;
+    auto [refX, refY, refZ] = node->referencePoint;
+    auto [posX, posY, posZ] = node->position;
+    auto [rotX, rotY, rotZ] = node->rotation;
 
-
+    /**
+     * The model transformation 🗡
+     */
     node->currentTransformationMatrix =
-            transformationThusFar *
-            glm::translate(glm::vec3(posX, posY, posZ)) *
-            glm::translate(glm::vec3(refX, refY, refZ)) *
-            glm::rotate(glm::mat4(),  rotX, glm::vec3(1, 0, 0)) *
-            glm::rotate(glm::mat4(), rotY, glm::vec3(0, 1, 0)) *
-            glm::rotate(glm::mat4(), rotZ, glm::vec3(0, 0, 1)) *
-            glm::translate(glm::vec3(-refX, -refY, -refZ));
+         transformationThusFar *
+         glm::translate(glm::vec3(posX, posY, posZ)) *
+         glm::translate(glm::vec3(refX, refY, refZ)) *
+         glm::rotate(glm::mat4(),  rotX, glm::vec3(1, 0, 0)) *
+         glm::rotate(glm::mat4(), rotY, glm::vec3(0, 1, 0)) *
+         glm::rotate(glm::mat4(), rotZ, glm::vec3(0, 0, 1)) *
+         glm::translate(glm::vec3(-refX, -refY, -refZ));
 
 
-    // Do rendering here
+    /**
+     * Rendering the node
+     * NOTE: Do not need to call OpenGL if there is nothing to render.
+     */
 
-    int location = glGetUniformLocation(sceneID, "rotationMatrix");
-    glBindVertexArray(vaoID);
-    glUniformMatrix4fv(location, 1, GL_FALSE, &node->currentTransformationMatrix[0][0]);
-    glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
+    if (vaoID > -1) {
+        int location = glGetUniformLocation(shader->get(), "model");
+        glBindVertexArray(vaoID);
+        glUniformMatrix4fv(location, 1, GL_FALSE, &node->currentTransformationMatrix[0][0]);
+        glDrawElements(GL_TRIANGLES, node->VAOIndexCount, GL_UNSIGNED_INT, nullptr);
+    }
 
-
+    /**
+     * Visit each child
+     */
     for (SceneNode* child : node->children)
-        visitSceneNode(child, node->currentTransformationMatrix, sceneID);
+        visitSceneNode(child, node->currentTransformationMatrix, shader);
 
 }
 
@@ -125,10 +139,7 @@ void visitSceneNode(SceneNode* node, glm::mat4 transformationThusFar, int sceneI
 void runProgram(GLFWwindow* window)
 {
     Gloom::Shader shader;
-    shader.makeBasicShader(
-            "../gloom/shaders/simple.vert",
-            "../gloom/shaders/simple.frag"
-            );
+    shader.makeBasicShader("../gloom/shaders/simple.vert", "../gloom/shaders/simple.frag");
 
     // Enable depth (Z) buffer (accept "closest" fragment)
     glEnable(GL_DEPTH_TEST);
@@ -142,7 +153,8 @@ void runProgram(GLFWwindow* window)
 
     MinecraftCharacter steve = loadMinecraftCharacterModel("../gloom/res/steve.obj");
 
-    Mesh terrain = generateChessboard(7, 5, tileWidth, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
+    Mesh terrain =
+            generateChessboard(7, 5, tileWidth, float4(1, 0.603, 0, 1.0), float4(0.172, 0.172, 0.172, 1.0));
 
     VertexArrayObject head(steve.head);
     VertexArrayObject torso(steve.torso);
@@ -201,10 +213,9 @@ void runProgram(GLFWwindow* window)
     addChild(torsoNode,rightArmNode);
     addChild(torsoNode,leftLegNode);
     addChild(torsoNode,rightLegNode);
-   // SceneNode* rootNode = createSceneGraph(terrain,steve);
 
 
-    Path path("../gloom/paths/coordinates_1.txt");
+    Path path(coordPath);
 
 
     // Activate shader
@@ -212,9 +223,8 @@ void runProgram(GLFWwindow* window)
 
     glm::mat4 projection;
     glm::mat4 view;
-    glm::mat4 model;
 
-    int location = glGetUniformLocation(shader.get(), "cameraMatrix");
+    int location = glGetUniformLocation(shader.get(), "projectionView");
 
     double increment = 0;
 
@@ -224,16 +234,24 @@ void runProgram(GLFWwindow* window)
     while (!glfwWindowShouldClose(window))
     {
 
-        model = glm::translate(translation);
         view =
-             glm::rotate(model, rotate[0], glm::vec3(1, 0, 0)) *
-             glm::rotate(model, rotate[1], glm::vec3(0, 1, 0));
-        projection = glm::perspective(3.14159265359f/2, float(windowHeight)/float(windowWidth), 1.0f, 200.0f);
-
-        glm::mat4 mvp = projection * view * model;
+             glm::translate(translation) *
+             glm::rotate(glm::mat4(), rotate.x, glm::vec3(1, 0, 0)) *
+             glm::rotate(glm::mat4(), rotate.y, glm::vec3(0, 1, 0));
 
 
-        glUniformMatrix4fv(location, 1, GL_FALSE, &mvp[0][0]);
+        projection =
+                glm::perspective(
+                        3.14159265358979323846f/2,
+                        float(windowHeight)/float(windowWidth),
+                        1.0f,
+                        200.0f
+                        );
+
+        glm::mat4 pv = projection * view;
+
+
+        glUniformMatrix4fv(location, 1, GL_FALSE, &pv[0][0]);
 
         // Clear colour and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -248,10 +266,10 @@ void runProgram(GLFWwindow* window)
          * Swinging the arms and legs
          * NOTE: Legs are swinging less because it looks more natural
          */
-        leftArmNode->rotation.x = static_cast<float>(-cos(increment) * 0.5);
-        rightArmNode->rotation.x = static_cast<float>(cos(increment) * 0.5);
-        leftLegNode->rotation.x = static_cast<float>(cos(increment) * 0.25);
-        rightLegNode->rotation.x = static_cast<float>(-cos(increment) * 0.25);
+        leftArmNode->rotation.x = static_cast<float>(-cos(increment) * 0.75);
+        rightArmNode->rotation.x = static_cast<float>(cos(increment) * 0.75);
+        leftLegNode->rotation.x = static_cast<float>(cos(increment) * 0.5);
+        rightLegNode->rotation.x = static_cast<float>(-cos(increment) * 0.5);
 
         
         /**
@@ -261,38 +279,19 @@ void runProgram(GLFWwindow* window)
         if(path.hasWaypointBeenReached(float2(torsoNode->position.x, torsoNode->position.z), tileWidth))
             path.advanceToNextWaypoint();
 
-        std::cout <<
-          path.getCurrentWaypoint(tileWidth) << " " <<
-          float2(torsoNode->position.x, torsoNode->position.z) <<
-          "\n";
 
-        float dx = tileWidth*path.getCurrentWaypoint(tileWidth).x - torsoNode->position.x;
-        float dy = tileWidth*path.getCurrentWaypoint(tileWidth).y - torsoNode->position.z;
-        float length = sqrtf(dx*dx+dy*dy);
+        glm::vec2 dPosition((path.getCurrentWaypoint(tileWidth).x - torsoNode->position.x),
+                            path.getCurrentWaypoint(tileWidth).y - torsoNode->position.z);
 
-        dx/=length;
-        dy/=length;
-        dx *= increment;
-        dy *= increment;
-        torsoNode->position.x = dx;
-        torsoNode->position.z = dy;
+        dPosition = glm::normalize(dPosition);
 
-        /*
-        if (path.getCurrentWaypoint(tileWidth).x > torsoNode->position.x) {
-            torsoNode->position.x = static_cast<float>(increment*2);
-        } else {
-            torsoNode->position.x = path.getCurrentWaypoint(tileWidth).x;
-        }
-        if (path.getCurrentWaypoint(tileWidth).y > torsoNode->position.z) {
-            torsoNode->position.z = static_cast<float>(increment*2);
-        } else {
-            torsoNode->position.z = path.getCurrentWaypoint(tileWidth).y;
-        }
-        */
+        double dRotation(atan2(dPosition.x, dPosition.y));
 
-        visitSceneNode(rootNode, glm::mat4(), shader.get());
+        torsoNode->position.x += dPosition.x / 4;
+        torsoNode->position.z += dPosition.y / 4;
+        torsoNode->rotation.y = dRotation;
 
-
+        visitSceneNode(rootNode, glm::mat4(), &shader);
 
 
         // Handle other events
