@@ -16,13 +16,14 @@
 
 ### Network of neurons -->
 
-Let's take an example of a _fully-connected neural network_ with **1 hidden layer** and **2 neurons** in each layer.
+Let's take an example of a _fully-connected neural network_ with **2 hidden layers** and **2 neurons** in each layer.
 
-![image](https://user-images.githubusercontent.com/18369201/47603440-3df86b80-d9ec-11e8-96e9-df2ce7e5a3d9.png)
+![image](https://user-images.githubusercontent.com/18369201/47615122-351a9f00-daab-11e8-925d-75e41b537317.png)
+
 _<center>Figure 1</center>_
 
 #### EXAMPLE:
-For our example we are going to create a neural network to predict if for a given background color we should use either a light or dark text color that is easily readable.
+For our example we are going to create a neural network to predict if for a given height the person is an adult or a child.
 
 https://www.youtube.com/watch?v=9Hz3P1VgLz4
 ##### Prerequisites
@@ -50,19 +51,13 @@ def initialize_weights(input_size, hidden_layer_size, output_size):
 ##### Data
 
 ```python
-# (r,g,b)
-input = [
-  (0,0,0) , # black
-  (255,255,255) # white
-]
+# height in cm
+data = [156, 140, 180, 192, 172, 162]
 
+# 1 means adult, 0 means child
+expected_output = [1, 0, 1, 1, 0, 1]
 
-# 1 means light, 0 means dark
-expected_output = [
-  1,
-  0
-]
-
+# Define some random weights
 weights = [
   -0.2, 0.34,
    0.1,-0.4,
