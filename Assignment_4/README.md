@@ -1,28 +1,30 @@
 # Image Processing
 
-
+---
 ##  Numerical examples
 
 We have chosen the two following numerical examples :
 - Numerical example of forward/backward propagation
 - Visualization of weights in a fully-trained convolutional neural network
+### Example 1.) Numerical example of forward/backward propagation
 
+#### Network description
 
-## Numerical example of forward/backward propagation
-
-### Network description
-For our example we chose to train on RGB colors, and predict if the written color above them should be black or white. The inputs numbers between 0 and 255. We normalize them before doing the forward and backward propagation. The output is the probability that the written color over the given RGB color (as input) should be black or white.
-We have chosen the following conventions :
-- 1 corresponds to white
-- 0 corresponds to black
-
-Let's take an example of a _fully-connected neural network_ with **2 hidden layers**, **1 input layer** and **1 output layer** . The input layer has 3 inputs. The first hidden layer has 5 neurons and the second hidden layer 2 neurons. Eventually the output layer has one output.
+Given a _fully-connected neural network_  with **2 hidden layers**, **1 input layer** and **1 output layer**. The input layer has 3 inputs. The first hidden layer has 5 neurons and the second hidden layer 2 neurons. Eventually the output layer has one output. The network is shown on _Figure 1_ below:
 
 ![Getting started](./network_graph.png)
 
 _<center>Figure 1</center>_
 
-Here are the corresponding weights matrices :
+For the given network, we choose to create a model that takes in an RGB color, and predicts if the written color above it should be black or white to be easily readable. The inputs are RGB color values, eg.: vectors of length of 3, where each value is a number from 0 to 255. The values are normalised (eg.: simply divided by 255 in this case) before doing the forward and backward propagation to make the model more reliable. The output of this model is a number between 0 and 1. It represents a probability if the written color over the given input color should be white.
+We chose the following conventions:
+- 1 corresponds to white
+- 0 corresponds to black
+
+Meaning, that if the model outputs a near 1 value, the text above the input color should be white, if it is near 0, it should be black.
+
+
+Here are the corresponding weight matrices for this network:
 
 $W^{1} = \begin{bmatrix}w^{1}_{11} & w^{1}_{21} & w^{1}_{31} & w_{0} \\w^{1}_{12} & w^{1}_{22} & w^{1}_{32} & w_{0}\\ w^{1}_{13} & w^{1}_{23} & w^{1}_{33} & w_{0} \\ w^{1}_{14} & w^{1}_{24} & w^{1}_{34} & w_{0} \\ w^{1}_{15} & w^{1}_{25} & w^{1}_{35} & w_{0} \end{bmatrix}$
 
@@ -32,54 +34,61 @@ $W^{3} = \begin{bmatrix} w^{3}_{11} & w^{3}_{21} & w_{2} \end{bmatrix}$
 
 Where $w^{k}_{ij}$ corresponds to the weight from neuron $i$ of layer $k$ to neuron $j$ of layer $k+1$.
 
-We have 4 layers, then we have 3 weights matrices.
+Since we have 4 layers, we will have 3 weight matrices.
 
-$W^{1}$ : between input layer and first hidden layer, with the bias of the input layer : $w_{0}$.
+$W^{1}$ : between the input layer and the first hidden layer, with the bias of the input layer : $w_{0}$.
 
-$W^{2}$ : between first hidden layer and second hidden layer, with the bias of the first hidden layer : $w_{1}$.
+$W^{2}$ : between the first hidden layer and the second hidden layer, with the bias of the first hidden layer : $w_{1}$.
 
-$W^{3}$ : between second hidden layer and output layer, with the bias of the second hidden layer : $w_{2}$.
+$W^{3}$ : between the second hidden layer and the output layer, with the bias of the second hidden layer : $w_{2}$.
 
-### Prerequisites
+#### Prerequisites
+We decided to implement this network in Python. To implement both the forward and the backward propagation, we have to decide about a few things.
 
-To implement both the forward propagation and the backward propagation, we need some prerequisites.
-
-First of all, we have to consider the `data`. We have the following normalized RGB colors :
+First of all, we have to consider the `input`:
 
 ```python
-# input normalized RGB colors
-
-
+  input = [
+    [0,1,0], # pure green
+    [0,1,1],
+    [1,0,0], # pure red
+    [0.95294118,0.99607843,0.99607843],
+    [0.93333333,0.93333333,0.93333333],
+    [0.90588235,0.65098039,0.80392157],
+    [0,0,0], # pure black
+    [0.87058824,0.87058824,0.80392157],
+    [0.26666667,0.26666667,0.93333333],
+    [0.92941176,0.88627451,0.0745098 ]
+  ]
 ```
 
-Each input color can be written as : $INPUT = [input_{1}, input_{2}, input_{3} ...]$. With $input_{i} = [input^{i}_{1}, input^{i}_{2}, input^{i}_{3}]$, with $i$ the number of inputs. Then $INPUT$ is a $3*i$ matrix which columns correspond to each input.
+$INPUT = [input_{1}, input_{2}, input_{3}, ..., input_{i}]$,
+Where ${i}$ is the number of inputs.
+An arbitrary $INPUT_{j} = $ $[input_{j}^{R}, input_{j}^{G}, input_{j}^{B}]$, where ${R}, {G}$ and ${B}$ are the normalised color values. Thus a single input is a vector of length ${3}$.
 
-As the `expected output` we have the following target probabilities :
+As the `expected output` we have the following array, where each value represents either black or white to the corresponding `input` value at the same index:
 
 ```python
 # expected output
-
-
+  expected_output = [1,1,0,0,0,0,1,0,1,0]
 ```
 
-The forward propagation compute the weighted sum for each layer, for the initialized random weights and the input for each layer.
-
-For `weight initialization`, we use random values from _normal distribution_. (We use NumPy to make life easier 👌):
+We compute the weighted sum of all the inputs of each neuron, at every layer. The weights are initialized randomly. 
+In our code, for `weight initialization`, we use random values from _normal distribution_. (We use NumPy to make life easier 👌):
 
 ```python
 for (layer1, layer2) in zip(layer[:-1],layer[1:]):
   self.weights.append(np.random.normal(scale=0.15,size =(layer2, layer1+1)))
 ```
 
-Note that here we add a dimension in order to add the bias for each layer. The bias is stored at the end of the weights vector.
+Note that here we add a dimension in order to add the bias for each layer. The bias is stored at the end of the weight vectors.
 
-By computing the weighted sum, the obtained values have a range from minus infinity to infinity... That is why we are using one function to range them between 0 and 1. This function is called the activation function.
-We chose to use only the sigmoid function as activation function since its derivative is easy to get :
+By computing the weighted sum, the obtained values have a range from minus infinity to infinity... That is why we are using one function to range them between 0 and 1. This function is called the **activation function**.
+We chose *sigmoid* as our only activation function since its derivative is easy to get :
 
 ```python
+  #activation function
   def sigmoid(self, beforeAct, derivative = False):
-   #activation function
-    #sigmoid function
     if not derivative:
       return 1/(1+np.exp(-beforeAct))
      else:
@@ -89,25 +98,25 @@ We chose to use only the sigmoid function as activation function since its deriv
 ```
 
 Note that the boolean here is used to get the derivative when needed.
+<!-- REVIEW:  -->
 We then have successively output values from the weighted sum which are, after the activate those values, the input for the next layer. Eventually, we obtain an output for each input (example) from the input data.
 
-Those first values should not be really good. That is why we are going to train our model, by modifying the weights according to each layer output. This is the backward propagation.
-
-
-### Forward propagation
+#### Forward propagation
 
 The principle of forward propagation is the following :
-- Step 1 : compute the weighted sum with the input data
-- Step 2 : apply the activation function to the previous result
-- Step 3 : compute the weighted sum for the following layer with ouput of the first (or previous) layer as an input (Step 3 (a)) and apply the activation function (Step 3 (b))
-- Step 4 : eventually, apply the steps 3 (a) and (b) for all the network's layers.
-- Step 5 : the result of the forward propagation is the final output for the last layer
+1. compute the weighted sum of the first hidden layer's neurons from the input data
+2. apply the activation function to the previous result
+3. 
+   a) compute the weighted sum from the previous layer as the input
+   b) apply the activation function and output the result to the next layer
+4. repeat 3a and 3b until the last layer has been reached
+5. the result of the forward propagation is the last hidden layer's output, also called the output layer
 
-As said previously, we have three weights matrices : $W^{1}$, $W^{2}$, $W^{3}$, and the $INPUT$ matrix. To simplify and understand better the calculations, **we consider only 3 inputs, ie: matrix with $i=3$, ie: $3*3$ matrix**.
+As said previously, we have three weight matrices : $W^{1}$, $W^{2}$, $W^{3}$, and the $INPUT$ matrix. To simplify and understand the calculations better, **let us consider only 3 inputs**, ie: matrix with $i=3$, ie: $3*3$ matrix.
 
 $INPUT = \begin{bmatrix} input^{1}_{1} & input^{1}_{2} & input^{1}_{3} \\ input^{2}_{1} & input^{2}_{2} & input^{2}_{3} \\  input^{3}_{1} & input^{3}_{2} & input^{3}_{3}\end{bmatrix}^{T}$
 
-Let's introduce now three other vectors : $Z^{1}$, $Z^{2}$, $Z^{3}$, for the first hidden layer, the second and the output layer. Each of them are composed of column vectors which correspond to each input (here we have 3 columns then). The value of each vector's coefficient is the weighted sum corresponding of each neuron of the layer.
+Let's now introduce three more vectors : $Z^{1}$, $Z^{2}$, $Z^{3}$, for each hidden layer (including the output layer). Each of them are composed of column vectors which correspond to each input (here we have 3 columns then). The value of each vector's coefficient is the weighted sum corresponding of each neuron of the layer.
 
 Let's introduce as well, $A^{1}$, $A^{2}$, $A^{3}$, which are the same matrices as $Z^{1}$, $Z^{2}$, $Z^{3}$, but after applying the activation function. Then :
 - $A^{1}$ is both the output of the first hidden layer and the input of the second hidden layer ($5*3$ matrix)
@@ -168,6 +177,7 @@ In our code we have to consider all the layers (using of `for loop` for Step 4),
 - Step 1 is done if we are considering our first layer
 - Step 3 (a) is done for all other layers
 
+<!-- REVIEW: enonced? -->
 We then do the previous enonced steps :
 - Step 2 and Step 3 (b) are done by taking the sigmoid of the previous results for each layer (last line of `for loop`)
 - Step 5 : we return the last computed output (that is to say the one for the last layer)
@@ -193,14 +203,21 @@ def forwardPropagation(self, input):
   return self._layer_output[-1].T
 ```
 
-### Backward propagation
+The very first results should not be very good. That is why we have to train our model, by modifying the weights according to each layer's output in each run. This is where backward propagation comes into the picture.
 
-To perform forward propagation result we have to go through the network and do back propagation. "back" term stands for the fact that we will begin from the last layer (output layer) to the first layer (input layer). While propagate, we compute gradients and update weights. After each forward propagation, the error can be calculated from the output layer : **error = output - expected_output**. The first step of backward propagation is to compute the derivative of the total error with respect to each weights which contribute to change this error. From this first derivative we will compute an other one again and again. That is why we can see from backward propagation that the error is distributed back through the network layer. Thus, the main goal of backpropagation is to update weights in order to decrease the total error of the next forward propagation.
+#### Backward propagation
+
+ The term "back"  stands for the fact that we are going to begin at the last (output) layer and go towards the first (input) layer. While propagating, we compute gradients and update weights. After each forward propagation, the error can be calculated from the output layer : **error = output - expected_output**. The first step of backward propagation is to compute the derivative of the total error with respect to each weights which contribute to change this error.
+ <!--REVIEW:  -->
+ From this first derivative we will compute an other one again and again. That is why we can see from backward propagation that the error is distributed back through the network layer. 
+ Thus, the main goal of backpropagation is to update weights in order to decrease the total error of the next forward propagation.
 
 In other words, we want to know how much a change in $w^{3}_{1}$ or $w^{3}_{2}$ affects the total error. In mathematical words, this corresponds to : 
 
 $\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}}$
+
 and
+
 $\frac{\partial{Error_{total}}}{\partial{w^{3}_{2}}}$
 
 Thanks to the chain rule, and with respect to the first input, we have :
@@ -249,10 +266,30 @@ def backpropagation(self, input, output, learning_rate = 0.2):
   return error
 ```
 
+After doing the backward propagation, and actually letting the model train for several iterations, we can now expect the results to get much more accurate.
+
+##### Our test results
+After training our model, we gave the network some never seen data. As _Figure 2_ shows below, on this small dataset we got exactly the expected output.
+(We assume that the value that should be returned corresponds to the text color on the left, over the inputs `hexToNormRGB` helped to visualize it better, so the reader can understand better what should we expect)
+![Results](results.png)
+
+<center>
+  <i>Figure 2</i>
+</center>
 
 
-## DATA ANALYSIS
+### Example 2.) Visualization of weights in a fully-trained convolutional neural network
+<!-- TODO: -->
+...
 
+
+---
+
+## Project option 1: Neural networks and deep learning
+
+### MNIST
+
+#### DATA ANALYSIS
 
 How many examples do I have in my dataset?
 --> 70000 (60000 training + 10000 test)
@@ -276,12 +313,12 @@ Exploring pixel data:
   - Pixels that distinguish pairs of images
 
 
-## Data pre-processing
+#### Data pre-processing
 
-### Loss function
+##### Loss function
 To compile a model we have to use a loss function that returns a scalar for each data-point. This loss function takes two arguments : true labels and predictions. It measures the performance of a classification model whose output is a probability value between 0 and 1.
 
-#### Cross entropy
+##### Cross entropy
 Cross entropy loss could also be called log loss. If the predicted probability diverges from the actual observation label, cross entropy increases. Then a perfect model, which means that the predicted probability is 1, would have a cross entropy loss of 0 (log loss : log(1) = 0).
 
 ![Getting started](./cross_entropy.png)
@@ -350,9 +387,9 @@ model.compile(loss=keras.losses.sparse_categorical_crossentropy,
               metrics=['categorical_accuracy'])
 
 ```
-sparse_sparse_acc.png
+![](sparse_sparse_acc.png)
 +
-sparse_without_sparse_acc.png
+![](sparse_without_sparse_acc.png)
 
 
 
@@ -363,14 +400,16 @@ sparse_without_sparse_acc.png
 ### Implementation of the given network
 
 
+```python
 model.add(Dense(50, activation = "relu"))
 model.add(Dense(50, activation = "relu"))
 
 learning_rate = 0.0003
-#model.compile(loss=keras.losses.sparse_categorical_crossentropy,
- #           optimizer=keras.optimizers.SGD(lr=learning_rate),
-  #            metrics=['sparse_categorical_accuracy'])
+  model.compile(loss=keras.losses.sparse_categorical_crossentropy,
+    optimizer=keras.optimizers.SGD(lr=learning_rate),
+      metrics=['sparse_categorical_accuracy'])
 
 model.compile(loss=keras.losses.categorical_crossentropy,
-            optimizer=keras.optimizers.Nadam(learning_rate),
-              metrics=['accuracy'])
+  optimizer=keras.optimizers.Nadam(learning_rate),
+    metrics=['accuracy'])
+```
