@@ -25,6 +25,8 @@ class Neural_Network():
             #output shape : layer2 * layer1 + 1 (+1 for the bias)
             self.weights.append(np.random.normal(scale=0.15,size = (layer2, layer1+1)))
 
+    def run(self, input):
+        print(self.forwardPropagation(input))
 
     def sigmoid(self, beforeAct, derivative = False):
     #activation function
@@ -135,22 +137,47 @@ if __name__ == '__main__':
     A = (3,5,2,1)
     net = Neural_Network(A)
     #print(bpn.weights[1])
-    input = np.array([[0,0,0],[1,1,1],[1,1,0],[0,0,1],])
+
+    def hexToNormRGB(hex):
+        return(list(int(hex[1:][i:i+2], 16)/255 for i in (0, 2 ,4)))
+
+    input = np.array([
+        hexToNormRGB("#00ff00"),
+        hexToNormRGB("#00ffff"),
+        hexToNormRGB("#ff0000"),
+        hexToNormRGB("#f3fefe"),
+        hexToNormRGB("#eeeeee"),
+        hexToNormRGB("#e7a6cd"),
+        hexToNormRGB("#000000"),
+        hexToNormRGB("#dedecd"),
+        hexToNormRGB("#4444ee"),
+        hexToNormRGB("#ede213")
+    ])
+
     #print(np.vstack([input.T, np.ones([1,input.shape[0]])]))
     #output = bpn.forwardPropagation(input)
     #print(output)
-    expected_output = np.array([[0.05],[0.05],[0.95],[0.95]])
+    expected_output = np.array([
+      1,1,0,0,0,0,1,0,1,0
+    ])
 
     max_iteration = 200000
     min_error = 1e-3
     for i in range(max_iteration):
         err = net.backpropagation(input,expected_output)
         if i%1000 == 0:
-            print("Iteration {0}\t error: {1:0.8f} ".format(i,err))
+            print("Iteration {0}\t error: {1:0.8f} ".format(i,err), end="\r")
+
         #if we reach the objective: out of the for
         if err <= min_error:
             print("Minimum error reached at iteration {0}".format(i))
             break
-    #call of forwardPropagation of each i
-    output=net.forwardPropagation(input)
-    print("Input:{0}\n output:{1}".format(input, output))
+
+    test = np.array([
+        hexToNormRGB("#ffffff"),
+        hexToNormRGB("#ed64fe"),
+        hexToNormRGB("#cdade0"),
+        hexToNormRGB("#599567"),
+    ])
+    # should return 0, 0, 0, 1
+    net.run(test)
