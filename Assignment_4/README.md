@@ -178,7 +178,7 @@ In our code we have to consider all the layers (using of `for loop` for Step 4),
 - Step 3 (a) is done for all other layers
 
 <!-- REVIEW: enonced? -->
-We then do the previous enonced steps :
+We then do those steps :
 - Step 2 and Step 3 (b) are done by taking the sigmoid of the previous results for each layer (last line of `for loop`)
 - Step 5 : we return the last computed output (that is to say the one for the last layer)
 
@@ -246,9 +246,17 @@ Combining all together we have :
 
 $$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . a^{2}_1$$
 
+To simplify, let's define $\delta_0$ as :
+$\delta_0 = \frac{\partial{Error_{total}}}{\partial{a^{3}}} . \frac{\partial{a^{3}}}{\partial{z^{3}}}$
+
+Then
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = \delta_0 . a^{2}_1$$
+
+
 In a similar way we can obtain :
 
-$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . a^{2}_2$$
+$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = \delta_0 . a^{2}_2$$
 
 Since : $\frac{\partial{z^{3}}}{\partial{w^{3}_{2}}} = 0 + a^{2}_2 + 0$
 
@@ -267,16 +275,28 @@ As $z^2_1 = w^{2}_{11} . a^{1}_1 + w^{2}_{21} . a^{1}_2 + w^{2}_{31} . a^{1}_3 +
 
 Thus :
 
-$$\frac{\partial{Error_{total}}}{\partial{w^{2}_{11}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . w^3_1 . (a^{2}_1 . (1 - a^{2}_1)) . a^{1}_1$$
+$$\frac{\partial{Error_{total}}}{\partial{w^{2}_{11}}} = \delta_0 . w^3_1 . (a^{2}_1 . (1 - a^{2}_1)) . a^{1}_1$$
 
 For all remaining weights of $W^2$ we can apply the same reasoning.
 
 But now comes a more interesting computation of the chain rule.
 Let's compute the impact of a change of $w^1_{11}$ : $\frac{\partial{Error_{total}}}{\partial{w^{1}_{11}}}$.
 
-A change in this weight $w^1_{11}$ will affect the first neuron of the first hidden layer for sure, ie: $a^1_1$. Since the latter takes part in the computation of both $z^2_1$ and $z^2_2$ in the second hidden layer our calculations will slightly change by letting appear sum of derivatives.
+A change in this weight $w^1_{11}$ will affect the first neuron of the first hidden layer for sure, ie: $a^1_1$. Since the latter takes part in the computation of both $z^2_1$ (and inderictely $a^{2}_1$) and $z^2_2$ (then affects $a^{2}_2$) in the second hidden layer, our calculations will slightly change by letting appear sum of derivatives.
 
-$$\frac{\partial{Error_{total}}}{\partial{w^{1}_{11}}} = \frac{\partial{Error_{total}}}{\partial{a^{3}}} . \frac{\partial{a^{3}}}{\partial{z^{3}}} . (\frac{\partial{z^{3}}}{\partial{a^{2}_1}} + \frac{\partial{z^{3}}}{\partial{a^{2}_2}}) . \frac{\partial{a^{2}_1}}{\partial{z^2_1}} . \frac{\partial{a^{2}_2}}{\partial{z^2_2}}. (\frac{\partial{z^2_1}}{\partial{a^{1}_{1}}} + \frac{\partial{z^2_2}}{\partial{a^{1}_{1}}}) . \frac{\partial{a^1_1}}{\partial{z^{1}_{1}}} . \frac{\partial{z^1_1}}{\partial{w^{1}_{1}}}$$
+The same reasoning can be applied to all the weights of the first hidden layer.
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{1}_{11}}} = \frac{\partial{Error_{total}}}{\partial{a^{1}_1}} . \frac{\partial{a^1_1}}{\partial{z^1_1}} . \frac{\partial{z^1_1}}{\partial{w^1_{11}}}$$
+$$= (\delta_0 . \frac{\partial{z^3}}{\partial{a^{2}_1}} . \frac{\partial{a^{2}_1}}{\partial{z^2_1}} . \frac{\partial{z^2_1}}{\partial{a^1_1}} + \delta_0 . \frac{\partial{z^3}}{\partial{a^{2}_2}} .  \frac{\partial{a^{2}_2}}{\partial{z^2_2}} . \frac{\partial{z^{2}_2}}{\partial{a^1_1}} ) . \frac{\partial{a^1_1}}{\partial{z^{1}_{1}}} . \frac{\partial{z^1_1}}{\partial{w^{1}_{1}}}$$
+
+Eventually, we have, for any weight $w$, the ratio which tell us how a small change of $w$ will affect the total error : $\frac{\partial{Error_{total}}}{\partial{w}}$.
+While propagating through the layers we then can update the weights as following :
+
+$$w_{new} = w_{old} - learningRate . \frac{\partial{Error_{total}}}{\partial{w_{old}}}$$
+
+$w_{old}$ comes first from the random weights initialization, and then from the updated weight at each backward propagation (since the forward propagation does not affect weights).
+
+
 
 
 
@@ -348,26 +368,6 @@ After training our model, we gave the network some never seen data. As _Figure 2
 
 #### DATA ANALYSIS
 
-How many examples do I have in my dataset?
---> 70000 (60000 training + 10000 test)
-What is the shape of my input images?
---> 28*28 of grayscale imaging
-How many classes do I have?
-10 classes
-What is the class distribution in my dataset?
---> code
-Is the testing set similar to the training set?
---> yes, also grayscale imaging, same dimension ...
-
-softmax regression
-
-https://dzone.com/articles/exploring-handwritten-digit-classification-a-tidy
-Exploring pixel data:
-  - How much gray is there in the set of images?
-  - Average of the images
-  - Which digits have more variability on average?
-  - Find the images which are the least similar to the average, and nearest
-  - Pixels that distinguish pairs of images
 
 
 #### Data pre-processing
