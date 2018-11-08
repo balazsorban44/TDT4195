@@ -221,7 +221,64 @@ and
 $\frac{\partial{Error_{total}}}{\partial{w^{3}_{2}}}$
 
 Thanks to the chain rule, and with respect to the first input, we have :
-$\frac{\partial{Error_{total}}}{\partial{w^{3}_{11}}} = \frac{\partial{Error_{total}}}{\partial{a^{2}_{1}}} . \frac{\partial{a^{2}_{1}}}{\partial{z^{2}_{1}}} . \frac{\partial{z^{2}_{1}}}{\partial{w^{3}_{11}}}$
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = \frac{\partial{Error_{total}}}{\partial{a^{3}}} . \frac{\partial{a^{3}}}{\partial{z^{3}}} . \frac{\partial{z^{3}}}{\partial{w^{3}_{1}}}$$
+
+By using the squared error we have :
+
+$Error_{total} = \frac{1}{2}.(expectedOutput - Output)^2$
+
+To know how much the total error change with respect to the output we have to compute : $\frac{\partial{Error_{total}}}{\partial{a^{3}}}$ : 
+
+$\frac{\partial{Error_{total}}}{\partial{a^{3}}} = 2.\frac{1}{2}.(-1).(expectedOutput - Output)^{2-1} = (Output - expectedOutput)$
+
+Now, how much does the Output change with respect to its input (ie: before activation : $z^{2}_{1}$). This is here where the derivative of the sigmoid function is used. Thus :
+$\frac{\partial{a^{3}}}{\partial{z^{3}}} = sigmoid(z^{3}).(1 - sigmoid(z^{3})) = a^{3} . (1 - a^{3})$
+
+Eventually, $\frac{\partial{z^{3}}}{\partial{w^{3}_{1}}}$ symbolizes the impact of the change of the weight $w^{3}_{1}$ on the weighted sum $z^{3}$.
+
+$z^{3} = w^{3}_{1} . a^{2}_1 + w^3_2 . a^2_2 + w_1.1$
+
+Thus,
+$\frac{\partial{z^{3}}}{\partial{w^{3}_{1}}} = a^{2}_1 + 0 + 0$
+
+Combining all together we have :
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . a^{2}_1$$
+
+In a similar way we can obtain :
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{3}_{1}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . a^{2}_2$$
+
+Since : $\frac{\partial{z^{3}}}{\partial{w^{3}_{2}}} = 0 + a^{2}_2 + 0$
+
+The above calculations correspond to $if$ $i == self.layerCount -1$ in the final code. That is to say, we apply those formulas in case we are in the output layer.
+
+For other layers (previous layers: hidden layers and input layer), the chain rule continue.
+Let's have a look on how much a change of weights involve in the first neuron of the second hidden layer impacts the total error. We can apply the reasoning to $w^{2}_{11}$.
+
+$\frac{\partial{Error_{total}}}{\partial{w^{2}_{11}}} = \frac{\partial{Error_{total}}}{\partial{a^{3}}} . \frac{\partial{a^{3}}}{\partial{z^{3}}} . \frac{\partial{z^{3}}}{\partial{a^{2}_1}} . \frac{\partial{a^{2}_1}}{\partial{z^2_1}}. \frac{\partial{z^2_1}}{\partial{w^{2}_{11}}}$
+
+$\frac{\partial{z^{3}}}{\partial{a^{2}_1}} = w^3_1$
+
+$\frac{\partial{a^{2}_1}}{\partial{z^2_1}} = a^{2}_1 . (1 - a^{2}_1)$
+
+As $z^2_1 = w^{2}_{11} . a^{1}_1 + w^{2}_{21} . a^{1}_2 + w^{2}_{31} . a^{1}_3 + w^{2}_{41} . a^{1}_4 + w^{2}_{51} . a^{1}_5 + w_1 . 1$, we have : $\frac{\partial{z^2_1}}{\partial{w^{2}_{11}}} = a^{1}_1$.
+
+Thus :
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{2}_{11}}} = (Output - expectedOutput) . (a^{3} . (1 - a^{3})) . w^3_1 . (a^{2}_1 . (1 - a^{2}_1)) . a^{1}_1$$
+
+For all remaining weights of $W^2$ we can apply the same reasoning.
+
+But now comes a more interesting computation of the chain rule.
+Let's compute the impact of a change of $w^1_{11}$ : $\frac{\partial{Error_{total}}}{\partial{w^{1}_{11}}}$.
+
+A change in this weight $w^1_{11}$ will affect the first neuron of the first hidden layer for sure, ie: $a^1_1$. Since the latter takes part in the computation of both $z^2_1$ and $z^2_2$ in the second hidden layer our calculations will slightly change by letting appear sum of derivatives.
+
+$$\frac{\partial{Error_{total}}}{\partial{w^{1}_{11}}} = \frac{\partial{Error_{total}}}{\partial{a^{3}}} . \frac{\partial{a^{3}}}{\partial{z^{3}}} . (\frac{\partial{z^{3}}}{\partial{a^{2}_1}} + \frac{\partial{z^{3}}}{\partial{a^{2}_2}}) . \frac{\partial{a^{2}_1}}{\partial{z^2_1}} . \frac{\partial{a^{2}_2}}{\partial{z^2_2}}. (\frac{\partial{z^2_1}}{\partial{a^{1}_{1}}} + \frac{\partial{z^2_2}}{\partial{a^{1}_{1}}}) . \frac{\partial{a^1_1}}{\partial{z^{1}_{1}}} . \frac{\partial{z^1_1}}{\partial{w^{1}_{1}}}$$
+
+
 
 
 Here is our `final backward propagation` code : 
