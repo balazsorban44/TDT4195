@@ -69,7 +69,6 @@ An arbitrary $INPUT_{j} = $ $[input_{j}^{R}, input_{j}^{G}, input_{j}^{B}]$, whe
 As the `expected output` we have the following array, where each value represents either black or white to the corresponding `input` value at the same index:
 
 ```python
-# expected output
   expected_output = [1,1,0,0,0,0,1,0,1,0]
 ```
 
@@ -98,8 +97,7 @@ We chose *sigmoid* as our only activation function since its derivative is easy 
 ```
 
 Note that the boolean here is used to get the derivative when needed.
-<!-- REVIEW:  -->
-We then have successively output values from the weighted sum which are, after the activate those values, the input for the next layer. Eventually, we obtain an output for each input (example) from the input data.
+We then have successively output values from the weighted sum which are - after the activate those values - the input for the next layer. Eventually, we obtain an output for each input (example) from the input data.
 
 #### Forward propagation
 
@@ -177,7 +175,6 @@ In our code we have to consider all the layers (using of `for loop` for Step 4),
 - Step 1 is done if we are considering our first layer
 - Step 3 (a) is done for all other layers
 
-<!-- REVIEW: enonced? -->
 We then do the previous enonced steps :
 - Step 2 and Step 3 (b) are done by taking the sigmoid of the previous results for each layer (last line of `for loop`)
 - Step 5 : we return the last computed output (that is to say the one for the last layer)
@@ -208,7 +205,6 @@ The very first results should not be very good. That is why we have to train our
 #### Backward propagation
 
  The term "back"  stands for the fact that we are going to begin at the last (output) layer and go towards the first (input) layer. While propagating, we compute gradients and update weights. After each forward propagation, the error can be calculated from the output layer : **error = output - expected_output**. The first step of backward propagation is to compute the derivative of the total error with respect to each weights which contribute to change this error.
- <!--REVIEW:  -->
  From this first derivative we will compute an other one again and again. That is why we can see from backward propagation that the error is distributed back through the network layer. 
  Thus, the main goal of backpropagation is to update weights in order to decrease the total error of the next forward propagation.
 
