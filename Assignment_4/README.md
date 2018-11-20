@@ -86,14 +86,15 @@ By computing the weighted sum, the obtained values have a range from minus infin
 We chose *sigmoid* as our only activation function since its derivative is easy to get :
 
 ```python
-  #activation function
-  def sigmoid(self, beforeAct, derivative = False):
+def sigmoid(self, beforeAct, derivative = False):
+#activation function
+    #sigmoid function
     if not derivative:
-      return 1/(1+np.exp(-beforeAct))
-     else:
-      #derivative formula
-      output = self.sigmoid(beforeAct)
-    return output*(1 - output)))
+        return 1/(1+np.exp(-beforeAct))
+    else:
+        #derivative formula
+        output = self.sigmoid(beforeAct)
+        return output*(1 - output)
 ```
 
 Note that the boolean here is used to get the derivative when needed.
@@ -183,22 +184,29 @@ We then do those steps :
 
 Here is our `final forward propagation` code : 
 ```python
-def forwardPropagation(self, input):
-  number_of_input = input.shape[0]
-  self._layer_input = []
-  self._layer_output = []
-  for i in range(self.layer_count):
-    if i == 0:
-      layerinput = self.weights[0].dot(np.vstack([input.T, np.ones([1,number_of_input])]))
+    def forwardPropagation(self, input):
+        number_of_input = input.shape[0]
+        self._layer_input = []
+        self._layer_output = []
+        for i in range(self.layer_count):
+            #if 1st layer (input layer)
+            if i == 0:
+                #self.weights[0] : weights between the first and the second (hidden) layer
+                #product between the corresponding weights and the transposed input matrix
+                #adding ones vector : for the bias addition after the weighted sum
+                layerinput = self.weights[0].dot(np.vstack([input.T, np.ones([1,number_of_input])]))
 
-    else:
+            else:
+                #same with taking the output of the previous layer (-1 takes the last one)
+                #each time we will have a output vector for each input (ones of size of number of inputs)
 
-      layerinput = self.weights[i].dot(np.vstack([self._layer_output[-1], np.ones([1,number_of_input])]))
-      self._layer_input.append(layerinput)
-      
-  self._layer_output.append(self.sigmoid(layerinput))
+                layerinput = self.weights[i].dot(np.vstack([self._layer_output[-1], np.ones([1,number_of_input])]))
+            #storing the layer input (vector because for each neuron): before activation
+            self._layer_input.append(layerinput)
+            #storing the output for each neuron (after activation --> sigmoid)
+            self._layer_output.append(self.sigmoid(layerinput))
 
-  return self._layer_output[-1].T
+        return self._layer_output[-1].T
 ```
 
 The very first results should not be very good. That is why we have to train our model, by modifying the weights according to each layer's output in each run. This is where backward propagation comes into the picture.
@@ -301,43 +309,73 @@ $w_{old}$ comes first from the random weights initialization, and then from the 
 Here is our `final backward propagation` code : 
 ```python
 def backpropagation(self, input, output, learning_rate = 0.2):
-  len_input = input.shape[0]
-  fwd_prog = self.forwardPropagation(input)
-  delta = []
+        len_input = input.shape[0]
+        #we need the ouput --> forward propagation
+        fwd_prog = self.forwardPropagation(input)
+        #delta calculation
+        delta = []
+        #we are going from the end to the beginning of the neural network
+        for i in reversed(range(self.layer_count)):
+            #for the penultimate layer
+            if i == self.layer_count -1:
+                #obtained output from forward propagation minus expected output
+                #output is stored in columns vectors --> transpose of the expected output
+                diff = self._layer_output[i] - output.T
+                #total squared error
+                error = np.sum(diff**2)
+                #difference times the derivative of pre activation value of the layer
+                #-->delta for the output layer
+                delta_k = diff * (self.sigmoid(self._layer_input[i], True))
+                #print(delta_k)
+                #storing of delta_k
+                delta.append(delta_k)
+            else:
+                #hidden layer needs the product of the previous layer’s delta
+                #with the previous layer’s weights (previous which is actually the next one in fw)
+                #chain rule : to obtain the derivative in function of a weight
+                #we have to multiply previous delta and
+                #d(inputvalue before activation)/d(weight) = weight
+                delta_j = self.weights[i+1].T.dot(delta[-1])
+                #without the last line which corresponds to the bias
+                #sigmoid derivative corresponds to:
+                #d(outputHiddenLayer)/d(inputHiddenLayer) =
+                #d(outputAfterActivation)/d(inputBeforeActivation)
+                #--> product with the gradient of the act function evaluated at the current layer
+                delta.append(delta_j[:-1,:] * self.sigmoid(self._layer_input[i], True))
 
+        #weights calculation
+        #for all the layers we update the weights
+        for i in range(self.layer_count):
+            #to update weights between 2 layers we need to use the output of
+            #the first one and the deltas of 2nd layer, ie: we have to store both corresponding indices
 
-  for i in reversed(range(self.layer_count)):
+            delta_i = self.layer_count -1 - i
+            #we have to get the output for each layer :
+            #i = 0 input layer (even if layer 0 is actually the first hidden layer in self._layer_output)
+            if i == 0:
+                #with adding the line for biases
+                #with vstack all the input will be in the same matrix of the array
+                layeroutput = np.vstack([input.T, np.ones([1, len_input])])
+            else:
+                #the layer output with bias is the output of considering layer
+                #with adding bias with corresponding size
+                #i-1 because i=0 is the input layer, and in self._layer_output
+                #we begin the indices at 0 : first hidden layer
+                layeroutput = np.vstack([self._layer_output[i-1], np.ones([1, self._layer_output[i-1].shape[1]])])
 
-    if i == self.layer_count -1:
-      diff = self._layer_output[i] - output.T
+            #we want the layer output of the first layer * the delta of the 2nd
+            #[None,:,:] : first dimension empty and 1st and 2nd with rows and columns of the data
+            #with transpose, we have a matrix where inputs are separatly stored
+            #same thing with deltas, because we want to multiply the output of the layer 1 with
+            #the delta of layer 2 for each input (ie: we have to sort it by inputs!)
+            #we put other axis to enable the matrix product
 
-      error = np.sum(diff**2)
+            weight_delta = np.sum(layeroutput[None,:,:].transpose(2,0,1) * delta[delta_i][None,:,:].transpose(2,1,0), axis=0)
 
-      delta_k = diff * (self.sigmoid(self._layer_input[i], True))
+            #update of the weights of layer i
+            self.weights[i] -= learning_rate * weight_delta
 
-      delta.append(delta_k)
-
-    else:
-      delta_j = self.weights[i+1].T.dot(delta[-1])
-      delta.append(delta_j[:-1,:] * self.sigmoid(self._layer_input[i], True))
-
-
-  for i in range(self.layer_count):
-    delta_i = self.layer_count -1 - i
-
-    if i == 0:
-      layeroutput = np.vstack([input.T, np.ones([1, len_input])])
-
-    else:
-      layeroutput = np.vstack([self._layer_output[i-1], np.ones([1, self._layer_output[i-1].shape[1]])])
-
-      weight_delta = np.sum(layeroutput[None,:,:].transpose(2,0,1) * delta[delta_i][None,:,:].transpose(2,1,0), axis=0)
-
-     self.weights[i] -= learning_rate * weight_delta
-
-
-
-  return error
+        return error
 ```
 
 After doing the backward propagation, and actually letting the model train for several iterations, we can now expect the results to get much more accurate.
@@ -353,117 +391,153 @@ After training our model, we gave the network some never seen data. As _Figure 2
 
 
 ### Example 2.) Visualization of weights in a fully-trained convolutional neural network
-<!-- TODO: -->
-...
 
-
----
-
-## Project option 1: Neural networks and deep learning
-
-### MNIST
-
-#### DATA ANALYSIS
-
-
-
-#### Data pre-processing
-
-##### Loss function
-To compile a model we have to use a loss function that returns a scalar for each data-point. This loss function takes two arguments : true labels and predictions. It measures the performance of a classification model whose output is a probability value between 0 and 1.
-
-##### Cross entropy
-Cross entropy loss could also be called log loss. If the predicted probability diverges from the actual observation label, cross entropy increases. Then a perfect model, which means that the predicted probability is 1, would have a cross entropy loss of 0 (log loss : log(1) = 0).
-
-![Getting started](./cross_entropy.png)
-
-_<center>Figure 2</center>_
-
-From this figure, one can see that as predicted probability decreases log loss increases rapidely and, however, as predicted probability increases log loss decreases slowly.
-
-
-
-#### Sparse cross entropy
-
-### Different optimization algorithm
-Optimization algorithms help us to minimize (or maximize) the error function, which is our most important objective while doing back propagation. This function depends on the learnable parameters of the network : the weights and the bias.
-#### Standard stochastic Gradient Descent (SGD)
-![Getting started](./good_96.png)
-
-_<center>Figure 3</center>_
-
-learning rate = 0.05  batch size = 128
-#### Adam optimizer
-learning_rate = 0.05 batch size = 128
-
-![Getting started](./adam_0.05_128.png)
-
-_<center>Figure 3</center>_
-#### RMSProp optimizer
-
-![Getting started](./optimizer_bad.png)
-
-_<center>Figure 4</center>_
-#### Nesterov Adam optimizer
-
+Code from https://blog.keras.io/how-convolutional-neural-networks-see-the-world.html
 ```python
-model.compile(loss=keras.losses.categorical_crossentropy,
-            optimizer=keras.optimizers.Nadam(learning_rate),
-              metrics=['categorical_accuracy'])
+'''Visualization of the filters of VGG16, via gradient ascent in input space.
+This script can run on CPU in a few minutes.
+'''
+from __future__ import print_function
+
+import time
+from keras.preprocessing.image import save_img
+from keras import backend as K
+
+# dimensions of the generated pictures for each filter.
+img_width = 128
+img_height = 128
+
+
+# util function to convert a tensor into a valid image
+
+
+def deprocess_image(x):
+    # normalize tensor: center on 0., ensure std is 0.1
+    x -= x.mean()
+    x /= (x.std() + K.epsilon())
+    x *= 0.1
+
+    # clip to [0, 1]
+    x += 0.5
+    x = np.clip(x, 0, 1)
+
+    # convert to RGB array
+    x *= 255
+    if K.image_data_format() == 'channels_first':
+        x = x.transpose((1, 2, 0))
+    x = np.clip(x, 0, 255).astype('uint8')
+    return x
+
+
+# get the symbolic outputs of each "key" layer (we gave them unique names).
+layer_dict = dict([(layer.name, layer) for layer in model.layers[1:]])
+
+
+def normalize(x):
+    # utility function to normalize a tensor by its L2 norm
+    return x / (K.sqrt(K.mean(K.square(x))) + K.epsilon())
+  
+def generate_vis(layer_name):
+  # this is the placeholder for the input images
+  input_img = model.input
+  
+  kept_filters = []
+  for filter_index in range(200):
+      # we only scan through some of the filters
+      start_time = time.time()
+
+      # we build a loss function that maximizes the activation
+      # of the nth filter of the layer considered
+      layer_output = layer_dict[layer_name].output
+      if K.image_data_format() == 'channels_first':
+          loss = K.mean(layer_output[:, filter_index, :, :])
+      else:
+          loss = K.mean(layer_output[:, :, :, filter_index])
+
+      # we compute the gradient of the input picture wrt this loss
+      grads = K.gradients(loss, input_img)[0]
+
+      # normalization trick: we normalize the gradient
+      grads = normalize(grads)
+
+      # this function returns the loss and grads given the input picture
+      iterate = K.function([input_img], [loss, grads])
+
+      # step size for gradient ascent
+      step = 1.
+
+      # we start from a gray image with some random noise
+      if K.image_data_format() == 'channels_first':
+          input_img_data = np.random.random((1, 3, img_width, img_height))
+      else:
+          input_img_data = np.random.random((1, img_width, img_height, 3))
+      input_img_data = (input_img_data - 0.5) * 20 + 128
+
+      # we run gradient ascent for 20 steps
+      for i in range(20):
+          loss_value, grads_value = iterate([input_img_data])
+          input_img_data += grads_value * step
+
+          #print('Current loss value:', loss_value)
+          if loss_value <= 0.:
+              # some filters get stuck to 0, we can skip them
+              break
+
+      # decode the resulting input image
+      if loss_value > 0:
+          img = deprocess_image(input_img_data[0])
+          kept_filters.append((img, loss_value))
+      end_time = time.time()
+      print('Filter %d processed in %ds' % (filter_index, end_time - start_time))
+
+  # we will stich the best 16 filters on a 4 x 4 grid.
+  n = 4
+
+  # the filters that have the highest loss are assumed to be better-looking.
+  # we will only keep the top 16 filters.
+  kept_filters.sort(key=lambda x: x[1], reverse=True)
+  kept_filters = kept_filters[:n * n]
+
+  # build a black picture with enough space for
+  # our 4 x 4 filters of size 128 x 128, with a 5px margin in between
+  margin = 5
+  width = n * img_width + (n - 1) * margin
+  height = n * img_height + (n - 1) * margin
+  stitched_filters = np.zeros((width, height, 3))
+
+  # fill the picture with our saved filters
+  for i in range(n):
+      for j in range(n):
+          img, loss = kept_filters[i * n + j]
+          width_margin = (img_width + margin) * i
+          height_margin = (img_height + margin) * j
+          stitched_filters[
+              width_margin: width_margin + img_width,
+              height_margin: height_margin + img_height, :] = img
+
+  # save the result to disk
+  save_img(layer_name + '_%dx%d.png' % (n, n), stitched_filters)
+  print(layer_name, " generated")
+  
+  
+# the name of the layers we want to visualize
+layers = ['block5_conv3']
+for layer in layers:
+  generate_vis(layer)
+
 ```
-![Getting started](./cross_nadam_acc.png)
-
-_<center>Figure 5</center>_
 
 
-### Metrics
-When a model is compiled, we can put a special metric function which will judge the performance of the model.
-#### Categorical accuracy
-#### Sparse categorical accuracy
-batch_size=128
-learning_rate = 0.05
+![](./visualizations/block1_conv1_4x4.png)
+Block 1, Conv. 1
+The above image shows filters from the first convolution. It is clear that it detects patterns.
 
-```python
-#model.compile(loss=keras.losses.sparse_categorical_crossentropy,
- #           optimizer=keras.optimizers.Adam(learning_rate),
-  #            metrics=['accuracy'])
+![](./visualizations/block2_conv2_4x4.png)
+Block 2, Conv. 2
+On the second image we can see that the network is trying to detect lines/edges.
+![](./visualizations/block3_conv3_4x4.png)
+Block 3, Conv. 3
+![](./visualizations/block4_conv3_4x4.png)
+Block 4, Conv. 3
 
-
-
-learning_rate = 0.15
-model.compile(loss=keras.losses.sparse_categorical_crossentropy,
-             optimizer=keras.optimizers.SGD(lr=learning_rate),
-              metrics=['sparse_categorical_accuracy'])
-
-learning_rate = 0.15
-model.compile(loss=keras.losses.sparse_categorical_crossentropy,
-             optimizer=keras.optimizers.SGD(lr=learning_rate),
-              metrics=['categorical_accuracy'])
-
-```
-![](sparse_sparse_acc.png)
-+
-![](sparse_without_sparse_acc.png)
-
-
-
-#### Top k categorical accuracy
-
-## Model construction
-
-### Implementation of the given network
-
-
-```python
-model.add(Dense(50, activation = "relu"))
-model.add(Dense(50, activation = "relu"))
-
-learning_rate = 0.0003
-  model.compile(loss=keras.losses.sparse_categorical_crossentropy,
-    optimizer=keras.optimizers.SGD(lr=learning_rate),
-      metrics=['sparse_categorical_accuracy'])
-
-model.compile(loss=keras.losses.categorical_crossentropy,
-  optimizer=keras.optimizers.Nadam(learning_rate),
-    metrics=['accuracy'])
-```
+The last to images are from deeper layers within the network, and are getting hard to explain what they are detecting because they are very abstract.
